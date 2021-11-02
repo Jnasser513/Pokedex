@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pokedex_search_input_layout"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="Write pokemon number"
+        app:errorEnabled="true"
+        android:elevation="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pokedex_title"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pokedex_search_input_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={viewModel.key}" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/action_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/default_gap"
+        android:layout_marginBottom="@dimen/minimum_gap"
+        android:backgroundTint="#99F57F17"
+        android:text="Search"
+        app:layout_constraintStart_toEndOf="@id/pokedex_search_input_layout"
+        app:layout_constraintTop_toTopOf="@id/pokedex_search_input_layout"
+        app:layout_constraintBottom_toBottomOf="@id/pokedex_search_input_layout"/>
+
+    <ImageView
+        android:id="@+id/pokedex_img_pokeball"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="-50dp"
+        android:layout_marginEnd="-50dp"
+        android:contentDescription="@string/description_pokeball"
+        android:src="@drawable/ic_pokeball"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/pokedex_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_gap"
+        android:layout_marginStart="@dimen/default_gap"
+        android:text="Pokedex"
+        android:fontFamily="@font/poppins_bold"
+        android:textSize="@dimen/maximum_text_size"
+        android:textColor="#1E1B30"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/pokedex_img_pokeball"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pokedex_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/default_gap"
+        android:layout_marginEnd="@dimen/medium_gap"
+        android:layout_marginTop="@dimen/medium_gap"
+        tools:listitem="@layout/pokemon_item"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pokedex_search_input_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

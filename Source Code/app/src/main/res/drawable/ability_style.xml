@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid
+                android:color="#45FFFFFF"/>
+            <corners
+                android:topRightRadius="@dimen/default_gap"
+                android:topLeftRadius="@dimen/default_gap"
+                android:bottomRightRadius="@dimen/default_gap"
+                android:bottomLeftRadius="@dimen/default_gap"/>
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Pokedex LSI</string>
+    <string name="description_pokeball">pokedex icon</string>
+    <string name="description_return_button">return button</string>
+    <string name="register_title">Create your account</string>
+    <string name="login_title">Login to your account</string>
+    <string name="description_pokemon">pokemon image</string>
+    <string name="about_title">About</string>
+    <string name="abilities_title">Abilities</string>
+    <string name="evolution_title">Evolution</string>
+    <string name="stats_title">Stats</string>
+</resources>
