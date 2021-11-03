@@ -1,119 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#48CFAF">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/action_return"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/maximum_gap"
-        android:layout_marginStart="@dimen/default_gap"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/description_return_button"
-        android:src="@drawable/ic_baseline_arrow_back_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/action_fav"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/maximum_gap"
-        android:layout_marginEnd="@dimen/default_gap"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/description_return_button"
-        android:src="@drawable/ic_favorite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/pokemon_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_gap"
-        android:layout_marginTop="@dimen/minimum_gap"
-        android:fontFamily="@font/poppins_bold"
-        android:textColor="@color/white"
-        android:textSize="@dimen/maximum_text_size"
-        app:layout_constraintEnd_toStartOf="@+id/pokemon_number"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/action_return"
-        tools:text="Pikachu" />
-
-    <TextView
-        android:id="@+id/pokemon_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_bold"
-        android:layout_marginEnd="@dimen/default_gap"
-        android:textColor="@color/white"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/pokemon_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pokemon_title"
-        tools:text="#001" />
-
-    <TextView
-        android:id="@+id/pokemon_ability"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:background="@drawable/ability_style"
-        android:fontFamily="@font/poppins_semibold"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintStart_toStartOf="@+id/pokemon_title"
-        app:layout_constraintTop_toBottomOf="@+id/pokemon_title"
-        tools:text="Electric" />
-
-    <TextView
-        android:id="@+id/pokemon_ability2"
-        android:layout_width="100dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="@dimen/default_gap"
-        android:background="@drawable/ability_style"
-        android:fontFamily="@font/poppins_semibold"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@id/pokemon_ability"
-        app:layout_constraintStart_toEndOf="@id/pokemon_ability"
-        app:layout_constraintTop_toTopOf="@id/pokemon_ability"
-        tools:text="Electric" />
-
-    <ImageView
-        android:id="@+id/pokemon_img"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pokemon_ability2"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:elevation="2dp"
-        android:contentDescription="@string/description_pokemon"
-        android:layout_marginTop="@dimen/default_gap"/>
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="160dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pokemon_ability2"
-        android:background="@drawable/pokemon_details_style">
+        android:layout_height="match_parent"
+        android:background="#48CFAF">
 
-        <include
-            layout="@layout/details_tab_activity"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageButton
+            android:id="@+id/action_return"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/maximum_gap"
+            android:layout_marginStart="@dimen/default_gap"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/description_return_button"
+            android:src="@drawable/ic_baseline_arrow_back_24"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/action_fav"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/maximum_gap"
+            android:layout_marginEnd="@dimen/default_gap"
+            android:backgroundTint="@android:color/transparent"
+            android:contentDescription="@string/description_return_button"
+            android:src="@drawable/ic_favorite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/pokemon_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_gap"
+            android:layout_marginTop="@dimen/minimum_gap"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@color/white"
+            android:textSize="@dimen/maximum_text_size"
+            app:layout_constraintEnd_toStartOf="@+id/pokemon_number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/action_return"
+            tools:text="Pikachu" />
+
+        <TextView
+            android:id="@+id/pokemon_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_bold"
+            android:layout_marginEnd="@dimen/default_gap"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/pokemon_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/pokemon_title"
+            tools:text="#001" />
+
+        <TextView
+            android:id="@+id/pokemon_ability"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ability_style"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="@+id/pokemon_title"
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_title"
+            tools:text="Electric" />
+
+        <TextView
+            android:id="@+id/pokemon_ability2"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="@dimen/default_gap"
+            android:background="@drawable/ability_style"
+            android:fontFamily="@font/poppins_semibold"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/pokemon_ability"
+            app:layout_constraintStart_toEndOf="@id/pokemon_ability"
+            app:layout_constraintTop_toTopOf="@id/pokemon_ability"
+            tools:text="Electric" />
+
+        <ImageView
+            android:id="@+id/pokemon_img"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_ability2"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:elevation="2dp"
+            android:contentDescription="@string/description_pokemon"
+            android:layout_marginTop="@dimen/default_gap" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="160dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_ability2"
+            android:background="@drawable/pokemon_details_style">
+
+            <include
+                layout="@layout/details_tab_activity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

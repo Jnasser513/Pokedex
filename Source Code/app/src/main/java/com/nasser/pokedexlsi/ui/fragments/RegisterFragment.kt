@@ -1,32 +1,38 @@
-package com.nasser.pokedexlsi
+package com.nasser.pokedexlsi.ui.fragments
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ProgressBar
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.nasser.pokedexlsi.databinding.ActivityRegisterBinding
+import com.nasser.pokedexlsi.databinding.RegisterFragmentBinding
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterFragment : Fragment() {
 
-    private lateinit var mBinding: ActivityRegisterBinding
+    private lateinit var mBinding: RegisterFragmentBinding
 
     private lateinit var dbReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mBinding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        mBinding = RegisterFragmentBinding.inflate(inflater, container, false)
 
         setUpListeners()
+
+        return mBinding.root
     }
 
     private fun setUpListeners() {
@@ -55,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             !TextUtils.isEmpty(lastName) &&
             !TextUtils.isEmpty(email) &&
             !TextUtils.isEmpty(password)) {
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
                 if(task.isComplete) {
                     val user: FirebaseUser? = auth.currentUser
                     verifyEmail(user)
@@ -70,16 +76,16 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun verifyEmail(user: FirebaseUser?) {
-        user?.sendEmailVerification()?.addOnCompleteListener(this) { task ->
+        user?.sendEmailVerification()?.addOnCompleteListener(requireActivity()) { task ->
             if(task.isComplete) {
-                Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Correo enviado", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Error al enviar el email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al enviar el email", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun actionComplete() {
-        startActivity(Intent(this, LoginActivity::class.java))
+        //startActivity(Intent(this, LoginFragment::class.java))
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android1="http://schemas.android.com/apk/res/android"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_pokedex"
+            android1:icon="@drawable/ic_home"
+            android1:title="@string/item_menu_pokedex_title"/>
+        <item
+            android:id="@+id/bookmark_pokemon"
+            android1:icon="@drawable/ic_bookmark"
+            android1:title="@string/item_menu_bookmark_title"/>
+        <item
+            android:id="@+id/sign_out"
+            android1:icon="@drawable/ic_close"
+            android1:title="@string/item_menu_close_title"/>
+    </group>
+</menu>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/homeScreenFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.nasser.pokedexlsi.ui.fragments.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment" />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.nasser.pokedexlsi.ui.fragments.RegisterFragment"
+        android:label="register_fragment"
+        tools:layout="@layout/register_fragment" />
+    <fragment
+        android:id="@+id/homeScreenFragment"
+        android:name="com.nasser.pokedexlsi.ui.fragments.HomeScreenFragment"
+        android:label="HomeScreenFragment"
+        tools:layout="@layout/home_screen_fragment"/>
+    <fragment
+        android:id="@+id/pokemonDetailsFragment"
+        android:name="com.nasser.pokedexlsi.ui.fragments.PokemonDetailsFragment"
+        android:label="PokemonDetailsFragment"
+        tools:layout="@layout/pokemon_detail_fragment"/>
+</navigation>

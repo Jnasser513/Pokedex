@@ -1,160 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/medium_gap"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/pokemon_description"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Descripcion del pokemon"
-        android:maxLines="4"
-        android:textSize="12sp"
-        android:fontFamily="@font/poppins_semibold"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/about_pokemon_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/minimum_gap"
-        app:cardElevation="@dimen/default_gap"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pokemon_description">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel" />
+    </data>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/medium_gap">
+
+        <TextView
+            android:id="@+id/pokemon_description"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/default_gap">
+            android:layout_height="100dp"
+            android:text="Descripcion del pokemon"
+            android:maxLines="4"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppins_semibold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/height_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Height"
-                android:fontFamily="@font/poppins_semibold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/about_pokemon_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/minimum_gap"
+            app:cardElevation="@dimen/default_gap"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_description">
 
-            <TextView
-                android:id="@+id/weight_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Weight"
-                android:fontFamily="@font/poppins_semibold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/default_gap">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="1.70 m"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/height_title"/>
+                <TextView
+                    android:id="@+id/height_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Height"
+                    android:fontFamily="@font/poppins_semibold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="70 kg"
-                app:layout_constraintTop_toBottomOf="@id/weight_title"/>
+                <TextView
+                    android:id="@+id/weight_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weight"
+                    android:fontFamily="@font/poppins_semibold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="1.70 m"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/height_title" />
 
-    </com.google.android.material.card.MaterialCardView>
-    
-    <TextView
-        android:id="@+id/breeding_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Breeding"
-        android:layout_marginTop="@dimen/default_gap"
-        android:textColor="#1E1B30"
-        android:fontFamily="@font/poppins_semibold"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/about_pokemon_card"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="70 kg"
+                    app:layout_constraintTop_toBottomOf="@id/weight_title" />
 
-    <TextView
-        android:id="@+id/gender_title"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_gap"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Gender"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/breeding_title" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/egg_groups_title"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_gap"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Egg Groups"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gender_title" />
+        </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:id="@+id/egg_cycle_title"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Egg Cycle"
-        android:layout_marginTop="@dimen/default_gap"
-        android:fontFamily="@font/poppins_semibold"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/egg_groups_title"/>
+        <TextView
+            android:id="@+id/breeding_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Breeding"
+            android:layout_marginTop="@dimen/default_gap"
+            android:textColor="#1E1B30"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/about_pokemon_card" />
 
-    <TextView
-        android:id="@+id/gender_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_semibold"
-        android:layout_marginStart="@dimen/default_gap"
-        android:text="Male"
-        android:textColor="#1E1B30"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/gender_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/gender_title"
-        app:layout_constraintTop_toTopOf="@+id/gender_title" />
+        <TextView
+            android:id="@+id/gender_title"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_gap"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Gender"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/breeding_title" />
 
-    <TextView
-        android:id="@+id/egg_groups_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/default_gap"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Monster"
-        android:textColor="#1E1B30"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/egg_groups_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/egg_groups_title"
-        app:layout_constraintTop_toTopOf="@+id/egg_groups_title" />
+        <TextView
+            android:id="@+id/egg_groups_title"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_gap"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Egg Groups"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gender_title" />
 
-    <TextView
-        android:id="@+id/egg_cycle_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_semibold"
-        android:layout_marginStart="@dimen/default_gap"
-        android:text="Grass"
-        android:textColor="#1E1B30"
-        android:textSize="@dimen/default_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/egg_cycle_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/egg_cycle_title"
-        app:layout_constraintTop_toTopOf="@+id/egg_cycle_title" />
+        <TextView
+            android:id="@+id/egg_cycle_title"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Egg Cycle"
+            android:layout_marginTop="@dimen/default_gap"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/egg_groups_title" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/gender_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginStart="@dimen/default_gap"
+            android:text="Male"
+            android:textColor="#1E1B30"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/gender_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/gender_title"
+            app:layout_constraintTop_toTopOf="@+id/gender_title" />
+
+        <TextView
+            android:id="@+id/egg_groups_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_gap"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Monster"
+            android:textColor="#1E1B30"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/egg_groups_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/egg_groups_title"
+            app:layout_constraintTop_toTopOf="@+id/egg_groups_title" />
+
+        <TextView
+            android:id="@+id/egg_cycle_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginStart="@dimen/default_gap"
+            android:text="Grass"
+            android:textColor="#1E1B30"
+            android:textSize="@dimen/default_text_size"
+            app:layout_constraintBottom_toBottomOf="@+id/egg_cycle_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/egg_cycle_title"
+            app:layout_constraintTop_toTopOf="@+id/egg_cycle_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
