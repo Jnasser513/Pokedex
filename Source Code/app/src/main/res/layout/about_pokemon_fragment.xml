@@ -14,19 +14,6 @@
         android:layout_height="match_parent"
         android:padding="@dimen/medium_gap">
 
-        <TextView
-            android:id="@+id/pokemon_description"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:text="Descripcion del pokemon"
-            android:maxLines="4"
-            android:textSize="12sp"
-            android:fontFamily="@font/poppins_semibold"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/about_pokemon_card"
             android:layout_width="match_parent"
@@ -35,7 +22,7 @@
             app:cardElevation="@dimen/default_gap"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pokemon_description">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

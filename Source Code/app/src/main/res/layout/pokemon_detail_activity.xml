@@ -41,33 +41,33 @@
             app:layout_constraintTop_toTopOf="@+id/pokemon_title"
             tools:text="#001" />
 
-        <TextView
-            android:id="@+id/pokemon_ability"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ability_style"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/default_text_size"
-            app:layout_constraintStart_toStartOf="@+id/pokemon_title"
-            app:layout_constraintTop_toBottomOf="@+id/pokemon_title"
-            tools:text="Electric" />
+        <HorizontalScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/pokemon_title"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_title">
 
-        <TextView
-            android:id="@+id/pokemon_ability2"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="@dimen/default_gap"
-            android:background="@drawable/ability_style"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/default_text_size"
-            app:layout_constraintBottom_toBottomOf="@id/pokemon_ability"
-            app:layout_constraintStart_toEndOf="@id/pokemon_ability"
-            app:layout_constraintTop_toTopOf="@id/pokemon_ability"
-            tools:text="Electric" />
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/pokemon_types"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_example_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_chip_one" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_example_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_chip_two" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
 
         <ImageButton
             android:id="@+id/pokemon_img"
@@ -83,7 +83,7 @@
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pokemon_ability2" />
+            app:layout_constraintTop_toBottomOf="@id/scrollView" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -94,7 +94,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pokemon_ability2">
+            app:layout_constraintTop_toBottomOf="@+id/scrollView">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/pokemon_detail_tab_layout"

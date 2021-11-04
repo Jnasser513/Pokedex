@@ -13,6 +13,5 @@ data class PokeApiResponse (
 
 data class PokeResult (
     @Expose @SerializedName("name") val name: String,
-    @Expose @SerializedName("url") val url: String,
-    @Expose @SerializedName("sprites") val sprites: Sprites
+    @Expose @SerializedName("url") val url: String
 )

@@ -23,7 +23,6 @@ class PokedexViewModel(private val repository: PokemonRepository): ViewModel() {
     val loading: LiveData<Int> get() = _loading
     private var _error = MutableLiveData<Int?>(null)
     val error: LiveData<Int?> get() = _error
-    val pokemons = repository.findAll()
 
     var soundList: List<Int> = listOf(
         R.raw.bulbasaur,
@@ -87,34 +86,37 @@ class PokedexViewModel(private val repository: PokemonRepository): ViewModel() {
     fun getPokemonList(){
         val call = service.getPokemonList(150,0)
 
-        call.enqueue(object : Callback<PokeApiResponse> {
-            override fun onResponse(call: Call<PokeApiResponse>, response: Response<PokeApiResponse>) {
-                response.body()?.results?.let { list ->
-                    pokemonList.postValue(list)
+        viewModelScope.launch {
+            call.enqueue(object : Callback<PokeApiResponse> {
+                override fun onResponse(call: Call<PokeApiResponse>, response: Response<PokeApiResponse>) {
+                    response.body()?.results?.let { list ->
+                        pokemonList.postValue(list)
+                    }
                 }
 
-            }
+                override fun onFailure(call: Call<PokeApiResponse>, t: Throwable) {
+                    call.cancel()
+                }
 
-            override fun onFailure(call: Call<PokeApiResponse>, t: Throwable) {
-                call.cancel()
-            }
-
-        })
+            })
+        }
     }
 
     fun getPokemonDetails(id: Int) {
         val call = service.getPokemonDetails(id)
 
-        call.enqueue(object : Callback<Pokemon1> {
-            override fun onResponse(call: Call<Pokemon1>, response: Response<Pokemon1>) {
-                response.body()?.let { pokemon ->
-                    pokemonDetails.postValue(pokemon)
+        viewModelScope.launch {
+            call.enqueue(object : Callback<Pokemon1> {
+                override fun onResponse(call: Call<Pokemon1>, response: Response<Pokemon1>) {
+                    response.body()?.let { pokemon ->
+                        pokemonDetails.postValue(pokemon)
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Pokemon1>, t: Throwable) {
-                call.cancel()
-            }
-        })
+                override fun onFailure(call: Call<Pokemon1>, t: Throwable) {
+                    call.cancel()
+                }
+            })
+        }
     }
 }

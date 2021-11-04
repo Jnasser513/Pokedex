@@ -15,7 +15,7 @@ interface PokemonDao{
     suspend fun search(key: String): Pokemon?
 
     @Query("SELECT * FROM pokemons")
-    fun findAll(): LiveData<List<Pokemon>>
+    suspend fun findAll(): LiveData<List<Pokemon>>
 
     @Update
     suspend fun update(pokemon: Pokemon)

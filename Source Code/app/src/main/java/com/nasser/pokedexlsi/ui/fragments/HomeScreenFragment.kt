@@ -48,8 +48,10 @@ class HomeScreenFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBinding.viewmodel = pokedexViewModel
-        mBinding.lifecycleOwner = viewLifecycleOwner
+        mBinding.apply {
+            viewmodel = pokedexViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
         mBinding.pokedexSearchInputEdit.doAfterTextChanged { message ->
             pokedexViewModel.key.value = message.toString()

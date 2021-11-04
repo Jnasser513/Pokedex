@@ -7,12 +7,16 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
+import com.nasser.pokedexlsi.data.entity.PokemonType
 import com.nasser.pokedexlsi.databinding.PokemonDetailActivityBinding
 import com.nasser.pokedexlsi.ui.adapters.DetailsViewPagerAdapter
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
+import java.util.*
 
 class PokemonDetailsActivity: AppCompatActivity() {
 
@@ -75,6 +79,16 @@ class PokemonDetailsActivity: AppCompatActivity() {
             Glide.with(this).load(pokemon.sprites.frontDefault).into(mBinding.pokemonImg)
         })
         mediaPlayerObserver(id-1)
+    }
+
+    private fun setTypes(types: List<PokemonType>){
+        val chips = mBinding.pokemonTypes
+        chips.removeAllViews()
+        types.forEach{
+            chips.addView(Chip(this).apply {
+                text = it.type.name.capitalize(Locale.getDefault())
+            })
+        }
     }
 
     private fun setUpTabs() {
