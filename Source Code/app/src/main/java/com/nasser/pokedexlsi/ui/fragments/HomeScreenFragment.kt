@@ -1,26 +1,27 @@
 package com.nasser.pokedexlsi.ui.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.databinding.HomeScreenFragmentBinding
-import com.nasser.pokedexlsi.repository.PokemonRepository
 import com.nasser.pokedexlsi.ui.adapters.PokeListAdapter
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
 
 class HomeScreenFragment: Fragment() {
 
-    private var mBinding: HomeScreenFragmentBinding? = null
-    private val binding get() = mBinding!!
+    private lateinit var mBinding: HomeScreenFragmentBinding
+    private lateinit var mContext: Context
+    private lateinit var mGridLayout:GridLayoutManager
 
     private val pokemonFactory: PokedexViewModelFactory by lazy {
         val app = requireActivity().application as PokedexApplication
@@ -39,21 +40,62 @@ class HomeScreenFragment: Fragment() {
         super.onCreateView(inflater, container, savedInstanceState)
         mBinding = HomeScreenFragmentBinding.inflate(inflater, container, false)
 
-        return binding.root
+        return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewmodel = pokedexViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        mBinding.viewmodel = pokedexViewModel
+        mBinding.lifecycleOwner = viewLifecycleOwner
 
-        binding.pokedexSearchInputEdit.doAfterTextChanged { message ->
+        mBinding.pokedexSearchInputEdit.doAfterTextChanged { message ->
             pokedexViewModel.key.value = message.toString()
         }
 
+        setUpListeners()
+    }
+
+    private fun setUpListeners() {
+        setUpRecyclerview()
+        displayResult()
+    }
+
+    private fun setUpRecyclerview() {
+        mGridLayout = GridLayoutManager(requireContext(), resources.getInteger(R.integer.main_columns))
+
+        mBinding.pokedexRecyclerview.apply {
+            setHasFixedSize(true)
+            layoutManager = mGridLayout
+            mBinding.pokedexRecyclerview.adapter = PokeListAdapter {
+                val intent = Intent(requireContext(), PokemonDetailsActivity::class.java)
+                intent.putExtra("id", it)
+                startActivity(intent)
+            }
+        }
+
+        pokedexViewModel.getPokemonList()
+
+        pokedexViewModel.pokemonList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { list ->
+            (mBinding.pokedexRecyclerview.adapter as PokeListAdapter).setData(list)
+        })
+
+        /*val rvAdpater = PokeListAdapter()
+        mGridLayout = GridLayoutManager(requireContext(), resources.getInteger(R.integer.main_columns))
+
+        mBinding.pokedexRecyclerview.apply {
+            adapter = rvAdpater
+            layoutManager = mGridLayout
+        }
+
+        pokedexViewModel.pokemons.observe(viewLifecycleOwner) {
+            rvAdpater.setData(it)
+        }*/
+    }
+
+    private fun displayResult() {
         pokedexViewModel.pokemon.observe(viewLifecycleOwner) { pokemon ->
-            val display = binding.pokedexSearchResult
+            val display = mBinding.pokedexSearchResult
             if (pokemon.name.isNotEmpty()) {
                 display.text =
                     getString(R.string.pokemon_info, pokemon.id, pokemon.name)
@@ -64,22 +106,11 @@ class HomeScreenFragment: Fragment() {
 
         pokedexViewModel.error.observe(viewLifecycleOwner) { error ->
             if (error == null) {
-                binding.pokedexSearchInputLayout.error = null
+                mBinding.pokedexSearchInputLayout.error = null
             } else {
-                binding.pokedexSearchInputLayout.error = getString(error)
+                mBinding.pokedexSearchInputLayout.error = getString(error)
             }
 
-        }
-
-        val rvAdpater = PokeListAdapter()
-
-        val rv = binding.pokedexRecyclerview.apply {
-            adapter = rvAdpater
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-
-        pokedexViewModel.pokemons.observe(viewLifecycleOwner) {
-            rvAdpater.setData(it)
         }
     }
 

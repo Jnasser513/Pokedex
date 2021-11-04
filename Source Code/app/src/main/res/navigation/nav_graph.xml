@@ -22,7 +22,7 @@
         tools:layout="@layout/home_screen_fragment"/>
     <fragment
         android:id="@+id/pokemonDetailsFragment"
-        android:name="com.nasser.pokedexlsi.ui.fragments.PokemonDetailsFragment"
+        android:name="com.nasser.pokedexlsi.ui.fragments.PokemonDetailsActivity"
         android:label="PokemonDetailsFragment"
-        tools:layout="@layout/pokemon_detail_fragment"/>
+        tools:layout="@layout/pokemon_detail_activity"/>
 </navigation>

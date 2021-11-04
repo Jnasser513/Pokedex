@@ -3,20 +3,39 @@ package com.nasser.pokedexlsi.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.nasser.pokedexlsi.R
-import com.nasser.pokedexlsi.data.entity.PokemonType
-import com.nasser.pokedexlsi.data.entity.PokemonWithType
-import java.util.*
+import com.nasser.pokedexlsi.data.network.PokeResult
+import kotlinx.android.synthetic.main.pokemon_item.view.*
 
-class PokeListAdapter: RecyclerView.Adapter<PokeListAdapter.PokemonViewHolder>() {
+class PokeListAdapter(val pokemonClick: (Int) -> Unit): RecyclerView.Adapter<PokeListAdapter.SearchViewHolder>() {
 
+
+    var pokemonList: List<PokeResult> = emptyList<PokeResult>()
+
+    fun setData(list: List<PokeResult>){
+        pokemonList = list
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
+        return SearchViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent,false))
+    }
+
+    override fun getItemCount(): Int {
+        return pokemonList.size
+    }
+
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+        val pokemon = pokemonList[position]
+        holder.itemView.name_pokemon.text = "${pokemon.name}"
+
+        holder.itemView.setOnClickListener { pokemonClick(position + 1) }
+    }
+
+    class SearchViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+
+    /*
     private var pokemons: List<PokemonWithType>? = null
 
     fun setData(data: List<PokemonWithType>) {
@@ -64,5 +83,5 @@ class PokeListAdapter: RecyclerView.Adapter<PokeListAdapter.PokemonViewHolder>()
 
     }
 
-    override fun getItemCount(): Int = pokemons?.size ?: 0
+    override fun getItemCount(): Int = pokemons?.size ?: 0*/
 }
