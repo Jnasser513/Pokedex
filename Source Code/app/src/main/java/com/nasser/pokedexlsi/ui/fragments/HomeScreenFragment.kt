@@ -10,12 +10,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.databinding.HomeScreenFragmentBinding
 import com.nasser.pokedexlsi.ui.adapters.PokeListAdapter
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
+import java.util.Observer
 
 class HomeScreenFragment: Fragment() {
 
@@ -67,7 +69,7 @@ class HomeScreenFragment: Fragment() {
         mBinding.pokedexRecyclerview.apply {
             setHasFixedSize(true)
             layoutManager = mGridLayout
-            mBinding.pokedexRecyclerview.adapter = PokeListAdapter {
+            adapter = PokeListAdapter {
                 val intent = Intent(requireContext(), PokemonDetailsActivity::class.java)
                 intent.putExtra("id", it)
                 startActivity(intent)

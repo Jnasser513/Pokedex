@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.data.network.PokeResult
 import kotlinx.android.synthetic.main.pokemon_item.view.*
 
 class PokeListAdapter(val pokemonClick: (Int) -> Unit): RecyclerView.Adapter<PokeListAdapter.SearchViewHolder>() {
-
-
     var pokemonList: List<PokeResult> = emptyList<PokeResult>()
 
     fun setData(list: List<PokeResult>){

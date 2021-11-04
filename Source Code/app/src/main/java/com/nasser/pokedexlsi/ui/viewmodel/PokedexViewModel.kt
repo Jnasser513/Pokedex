@@ -1,5 +1,6 @@
 package com.nasser.pokedexlsi.ui.viewmodel
 
+import android.media.MediaPlayer
 import android.view.View
 import androidx.lifecycle.*
 import com.nasser.pokedexlsi.R
@@ -24,8 +25,25 @@ class PokedexViewModel(private val repository: PokemonRepository): ViewModel() {
     val error: LiveData<Int?> get() = _error
     val pokemons = repository.findAll()
 
+    var soundList: List<Int> = listOf(
+        R.raw.bulbasaur,
+        R.raw.ivisaur,
+        R.raw.venasaur,
+    )
+
     val pokemonList = MutableLiveData<List<PokeResult>>()
     val pokemonDetails = MutableLiveData<Pokemon1>()
+
+    private val _mediaPlayer = MutableLiveData<Boolean?>()
+    val mediaPlayer: LiveData<Boolean?> = _mediaPlayer
+
+    fun startEmitSound() {
+        _mediaPlayer.value = true
+    }
+
+    fun endEmitSound() {
+        _mediaPlayer.value = null
+    }
 
     fun search() {
         _error.value = null

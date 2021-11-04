@@ -2,6 +2,7 @@ package com.nasser.pokedexlsi.data.network
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.nasser.pokedexlsi.data.entity.Sprites
 
 data class PokeApiResponse (
     @Expose @SerializedName("count") val count: Int,
@@ -12,5 +13,6 @@ data class PokeApiResponse (
 
 data class PokeResult (
     @Expose @SerializedName("name") val name: String,
-    @Expose @SerializedName("url") val url: String
+    @Expose @SerializedName("url") val url: String,
+    @Expose @SerializedName("sprites") val sprites: Sprites
 )

@@ -1,6 +1,7 @@
 package com.nasser.pokedexlsi.data.network
 
 import com.nasser.pokedexlsi.data.entity.Pokemon
+import com.nasser.pokedexlsi.data.entity.Pokemon1
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

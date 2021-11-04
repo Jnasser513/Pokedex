@@ -38,6 +38,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_emit_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/maximum_gap"
+            android:text="Emit sound"
+            android:fontFamily="@font/poppins_semibold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/pokemon_title"
             android:layout_width="0dp"
@@ -97,30 +108,49 @@
             android:id="@+id/pokemon_img"
             android:layout_width="170dp"
             android:layout_height="170dp"
-            android:src="@mipmap/ic_launcher"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pokemon_ability2"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:elevation="2dp"
+            android:layout_marginTop="@dimen/default_gap"
             android:contentDescription="@string/description_pokemon"
-            android:layout_marginTop="@dimen/default_gap" />
+            android:elevation="2dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_ability2" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="130dp"
+            android:background="@drawable/pokemon_details_style"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pokemon_ability2"
-            android:background="@drawable/pokemon_details_style">
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_ability2">
 
-            <include
-                layout="@layout/details_tab_activity"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/pokemon_detail_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/pokemon_details_style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabIndicatorColor="@android:color/holo_blue_dark"
+                app:tabMode="fixed"
+                app:tabTextColor="#1E1B30">
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/pokemon_detail_tab_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

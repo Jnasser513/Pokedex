@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.fragments.PokemonDetailsActivity" />
+        <activity android:name=".ui.DetailsTabActivity" />
     </application>
 
 </manifest>
