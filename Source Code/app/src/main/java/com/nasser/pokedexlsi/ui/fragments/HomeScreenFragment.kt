@@ -81,18 +81,6 @@ class HomeScreenFragment: Fragment() {
         pokedexViewModel.pokemonList.observe(viewLifecycleOwner, androidx.lifecycle.Observer { list ->
             (mBinding.pokedexRecyclerview.adapter as PokeListAdapter).setData(list)
         })
-
-        /*val rvAdpater = PokeListAdapter()
-        mGridLayout = GridLayoutManager(requireContext(), resources.getInteger(R.integer.main_columns))
-
-        mBinding.pokedexRecyclerview.apply {
-            adapter = rvAdpater
-            layoutManager = mGridLayout
-        }
-
-        pokedexViewModel.pokemons.observe(viewLifecycleOwner) {
-            rvAdpater.setData(it)
-        }*/
     }
 
     private fun displayResult() {
@@ -114,20 +102,5 @@ class HomeScreenFragment: Fragment() {
             }
 
         }
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment PokedexFragment.
-         */
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeScreenFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
     }
 }

@@ -44,6 +44,20 @@ class PokemonDetailsActivity: AppCompatActivity() {
         setUpListeners()
     }
 
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.pause()
+        finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
+        finish()
+    }
+
     private fun setUpListeners(){
         initUI()
         setUpTabs()
@@ -60,7 +74,7 @@ class PokemonDetailsActivity: AppCompatActivity() {
             //IMPORTANTE
             Glide.with(this).load(pokemon.sprites.frontDefault).into(mBinding.pokemonImg)
         })
-        mediaPlayerObserver(id)
+        mediaPlayerObserver(id-1)
     }
 
     private fun setUpTabs() {
@@ -80,10 +94,13 @@ class PokemonDetailsActivity: AppCompatActivity() {
     }
 
     private fun mediaPlayerObserver(id: Int) {
-        pokedexViewModel.mediaPlayer.observe(this, Observer { audio ->
-            mBinding.actionEmitSound.setOnClickListener {
-                mediaPlayer = MediaPlayer.create(this, pokedexViewModel.soundList[id])
-                mediaPlayer?.start()
+        pokedexViewModel.mediaPlayer.observe(this, Observer {
+            it?.let {
+                if(it){
+                    mediaPlayer = MediaPlayer.create(this, pokedexViewModel.soundList[id])
+                    mediaPlayer?.start()
+                }
+                pokedexViewModel.endEmitSound()
             }
         })
     }

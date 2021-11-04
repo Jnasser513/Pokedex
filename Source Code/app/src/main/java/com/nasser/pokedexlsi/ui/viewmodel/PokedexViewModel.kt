@@ -29,6 +29,28 @@ class PokedexViewModel(private val repository: PokemonRepository): ViewModel() {
         R.raw.bulbasaur,
         R.raw.ivisaur,
         R.raw.venasaur,
+        R.raw.charmander,
+        R.raw.charmeleon,
+        R.raw.charizard,
+        R.raw.squirtle,
+        R.raw.wartortle,
+        R.raw.blastoise,
+        R.raw.caterpie,
+        R.raw.metapod,
+        R.raw.butterfre,
+        R.raw.weedle,
+        R.raw.kakuna,
+        R.raw.beedrill,
+        R.raw.pigdey,
+        R.raw.pigeotto,
+        R.raw.pidgeot,
+        R.raw.rattata,
+        R.raw.raticate,
+        R.raw.spearow,
+        R.raw.fearow,
+        R.raw.ekans,
+        R.raw.arbok,
+        R.raw.pikachu
     )
 
     val pokemonList = MutableLiveData<List<PokeResult>>()

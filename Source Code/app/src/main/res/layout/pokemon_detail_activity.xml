@@ -14,41 +14,6 @@
         android:layout_height="match_parent"
         android:background="#48CFAF">
 
-        <ImageButton
-            android:id="@+id/action_return"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="@dimen/maximum_gap"
-            android:layout_marginStart="@dimen/default_gap"
-            android:backgroundTint="@android:color/transparent"
-            android:contentDescription="@string/description_return_button"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/action_fav"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="@dimen/maximum_gap"
-            android:layout_marginEnd="@dimen/default_gap"
-            android:backgroundTint="@android:color/transparent"
-            android:contentDescription="@string/description_return_button"
-            android:src="@drawable/ic_favorite"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/action_emit_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/maximum_gap"
-            android:text="Emit sound"
-            android:fontFamily="@font/poppins_semibold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <TextView
             android:id="@+id/pokemon_title"
             android:layout_width="0dp"
@@ -60,7 +25,7 @@
             android:textSize="@dimen/maximum_text_size"
             app:layout_constraintEnd_toStartOf="@+id/pokemon_number"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/action_return"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Pikachu" />
 
         <TextView
@@ -104,7 +69,7 @@
             app:layout_constraintTop_toTopOf="@id/pokemon_ability"
             tools:text="Electric" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/pokemon_img"
             android:layout_width="170dp"
             android:layout_height="170dp"
@@ -112,6 +77,9 @@
             android:contentDescription="@string/description_pokemon"
             android:elevation="2dp"
             android:src="@mipmap/ic_launcher"
+            android:onClick="@{()-> viewmodel.startEmitSound()}"
+            android:backgroundTint="@android:color/transparent"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
