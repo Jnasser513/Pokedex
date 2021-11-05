@@ -21,7 +21,6 @@ import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
 class HomeScreenFragment: Fragment() {
 
     private lateinit var mBinding: HomeScreenFragmentBinding
-    private lateinit var mContext: Context
     private lateinit var mGridLayout:GridLayoutManager
 
     private val pokemonFactory: PokedexViewModelFactory by lazy {

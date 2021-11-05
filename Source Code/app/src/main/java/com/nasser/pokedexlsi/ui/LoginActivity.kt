@@ -29,16 +29,11 @@ class LoginActivity : AppCompatActivity() {
     private fun setUpListeners() {
         setUp()
         goToRegister()
-        forgotPassword()
         login()
     }
 
     private fun setUp() {
         auth = FirebaseAuth.getInstance()
-    }
-
-    fun forgotPassword() {
-
     }
 
     fun goToRegister() {

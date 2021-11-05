@@ -20,15 +20,6 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var mBinding: RegisterActivityBinding
 
-    /*private val pokemonFactory: PokedexViewModelFactory by lazy {
-        val app = this.application as PokedexApplication
-        PokedexViewModelFactory(app.pokemonRepository)
-    }
-
-    private val pokedexViewModel: PokedexViewModel by viewModels {
-        pokemonFactory
-    }*/
-
     private lateinit var dbReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
@@ -43,7 +34,6 @@ class RegisterActivity : AppCompatActivity() {
         }*/
 
         setUpListeners()
-
     }
 
     private fun setUpListeners() {

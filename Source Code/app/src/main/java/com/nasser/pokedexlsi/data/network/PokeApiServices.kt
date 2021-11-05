@@ -14,4 +14,6 @@ interface PokeApiServices {
     fun getPokemonList(@Query("limit") limit: Int, @Query("offset") offset: Int): Call<PokeApiResponse>
     @GET("pokemon/{id}")
     fun getPokemonDetails(@Path("id") id: Int): Call<Pokemon1>
+    @GET("gender/{id}")
+    fun getPokemonGender(@Path("id") id: Int): Call<Pokemon1>
 }

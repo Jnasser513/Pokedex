@@ -33,22 +33,17 @@ data class PokemonType(
     var idPokemon : Int = 0
 }
 
-@Entity(tableName = "pokemon_abilities", primaryKeys = ["slot", "idPokemon"])
+@Entity(tableName = "pokemon_abilities")
 data class PokemonAbilities(
     var slot: Int,
     var ability: NamedAPIResource
-) {
-    var idPokemon: Int = 0
-}
+)
 
-@Entity(tableName = "pokemon_stats", primaryKeys = ["base_stat", "idPokemon"])
+@Entity(tableName = "pokemon_stats")
 data class PokemonStats(
-    var base_stat : Int,
-    @Embedded
-    var stat : NamedAPIResource
-){
-    var idPokemon : Int = 0
-}
+    var base_stat: Int,
+    var stat: NamedAPIResource
+)
 
 data class PokemonSprites(
     @ColumnInfo(name = "front_default")

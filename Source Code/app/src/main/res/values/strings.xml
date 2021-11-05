@@ -21,4 +21,7 @@
     <string name="hint_pokemon">Ingrese un numero o id de pokemon</string>
     <string name="text_chip_one">Grass</string>
     <string name="text_chip_two">Fire</string>
+    <string name="decription1_home">-Buscar pokemon por nombre o id: Ingdresar pokemon o id en la cajita de busqueda, el resultado sera visible en un textview debajo de la cajita de busqueda.</string>
+    <string name="description2_home">-Mostrar 150 pokemons: al presionar sobre el pokemon se abrira otra vista con los pokemons mas detallados.</string>
+    <string name="description_details">-Al abrirse la vista detallada de pokemons, observamos mas informacion de ellos, para activar el sonido emitido por los pockemons hacer clic sobre el pokemon (solo funciona con los primeros 25) para que no se llenara la lista con los 600 resources.</string>
 </resources>
