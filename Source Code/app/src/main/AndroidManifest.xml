@@ -13,7 +13,7 @@
         android:theme="@style/Theme.PokedexLSI"
         android:name=".PokedexApplication">
         <activity
-            android:name=".ui.AppBarActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.fragments.PokemonDetailsActivity" />
-        <activity android:name=".ui.DetailsTabActivity" />
+        <activity android:name=".ui.PokemonDetailsActivity" />
+        <activity android:name=".ui.RegisterActivity" />
+        <activity android:name=".ui.AppBarActivity" />
     </application>
 
 </manifest>

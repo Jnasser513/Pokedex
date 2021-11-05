@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/default_gap"
-        tools:context=".ui.fragments.RegisterFragment">
+        tools:context=".ui.RegisterActivity">
 
         <ImageButton
             android:id="@+id/action_return"

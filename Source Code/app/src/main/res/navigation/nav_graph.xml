@@ -7,14 +7,14 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.nasser.pokedexlsi.ui.fragments.LoginFragment"
+        android:name="com.nasser.pokedexlsi.ui.LoginActivity"
         android:label="login_fragment"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/login_activity" />
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.nasser.pokedexlsi.ui.fragments.RegisterFragment"
+        android:name="com.nasser.pokedexlsi.ui.RegisterActivity"
         android:label="register_fragment"
-        tools:layout="@layout/register_fragment" />
+        tools:layout="@layout/register_activity" />
     <fragment
         android:id="@+id/homeScreenFragment"
         android:name="com.nasser.pokedexlsi.ui.fragments.HomeScreenFragment"
@@ -22,7 +22,7 @@
         tools:layout="@layout/home_screen_fragment"/>
     <fragment
         android:id="@+id/pokemonDetailsFragment"
-        android:name="com.nasser.pokedexlsi.ui.fragments.PokemonDetailsActivity"
+        android:name="com.nasser.pokedexlsi.ui.PokemonDetailsActivity"
         android:label="PokemonDetailsFragment"
         tools:layout="@layout/pokemon_detail_activity"/>
 </navigation>

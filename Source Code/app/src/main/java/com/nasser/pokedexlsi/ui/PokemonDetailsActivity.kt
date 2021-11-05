@@ -1,19 +1,21 @@
-package com.nasser.pokedexlsi.ui.fragments
+package com.nasser.pokedexlsi.ui
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.data.entity.PokemonType
 import com.nasser.pokedexlsi.databinding.PokemonDetailActivityBinding
 import com.nasser.pokedexlsi.ui.adapters.DetailsViewPagerAdapter
+import com.nasser.pokedexlsi.ui.fragments.AbilitiesPokemonFragment
+import com.nasser.pokedexlsi.ui.fragments.AboutPokemonFragment
+import com.nasser.pokedexlsi.ui.fragments.EvolutionPokemonFragment
+import com.nasser.pokedexlsi.ui.fragments.StatsPokemonFragment
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
 import java.util.*
@@ -77,6 +79,7 @@ class PokemonDetailsActivity: AppCompatActivity() {
             mBinding.pokemonNumber.text = pokemon.id.toString()
             //IMPORTANTE
             Glide.with(this).load(pokemon.sprites.frontDefault).into(mBinding.pokemonImg)
+            setTypes(pokemon.types)
         })
         mediaPlayerObserver(id-1)
     }

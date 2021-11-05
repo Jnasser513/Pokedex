@@ -81,7 +81,8 @@ data class Pokemon1 (
     @Expose @SerializedName("name") val name: String,
     @Expose @SerializedName("weight") val weight: Int,
     @Expose @SerializedName("height") val height: Int,
-    @Expose @SerializedName("sprites") val sprites: Sprites
+    @Expose @SerializedName("sprites") val sprites: Sprites,
+    @Expose @SerializedName("types") val types: List<PokemonType>
 )
 
 data class Sprites (

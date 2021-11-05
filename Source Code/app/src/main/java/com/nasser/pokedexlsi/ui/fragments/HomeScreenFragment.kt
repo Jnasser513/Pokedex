@@ -10,14 +10,13 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.databinding.HomeScreenFragmentBinding
+import com.nasser.pokedexlsi.ui.PokemonDetailsActivity
 import com.nasser.pokedexlsi.ui.adapters.PokeListAdapter
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModel
 import com.nasser.pokedexlsi.ui.viewmodel.PokedexViewModelFactory
-import java.util.Observer
 
 class HomeScreenFragment: Fragment() {
 

@@ -1,4 +1,4 @@
-package com.nasser.pokedexlsi.ui.fragments
+package com.nasser.pokedexlsi.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,37 +7,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.nasser.pokedexlsi.databinding.RegisterFragmentBinding
+import com.nasser.pokedexlsi.databinding.RegisterActivityBinding
+import com.nasser.pokedexlsi.ui.LoginActivity
 
-class RegisterFragment : Fragment() {
+class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var mBinding: RegisterFragmentBinding
+    private lateinit var mBinding: RegisterActivityBinding
+
+    /*private val pokemonFactory: PokedexViewModelFactory by lazy {
+        val app = this.application as PokedexApplication
+        PokedexViewModelFactory(app.pokemonRepository)
+    }
+
+    private val pokedexViewModel: PokedexViewModel by viewModels {
+        pokemonFactory
+    }*/
 
     private lateinit var dbReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        mBinding = RegisterFragmentBinding.inflate(inflater, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mBinding = RegisterActivityBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+        /*mBinding.apply {
+            viewmodel = pokedexViewModel
+            lifecycleOwner = this@RegisterActivity
+        }*/
 
         setUpListeners()
 
-        return mBinding.root
     }
 
     private fun setUpListeners() {
         setUp()
-        createNewAccount()
+        registerUser()
+        returnToLogin()
     }
 
     private fun setUp() {
@@ -47,8 +59,10 @@ class RegisterFragment : Fragment() {
         dbReference = database.reference.child("User")
     }
 
-    fun registerUser(view: View) {
-        createNewAccount()
+    fun registerUser() {
+        mBinding.actionRegister.setOnClickListener {
+            createNewAccount()
+        }
     }
 
     private fun createNewAccount() {
@@ -61,7 +75,7 @@ class RegisterFragment : Fragment() {
             !TextUtils.isEmpty(lastName) &&
             !TextUtils.isEmpty(email) &&
             !TextUtils.isEmpty(password)) {
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if(task.isComplete) {
                     val user: FirebaseUser? = auth.currentUser
                     verifyEmail(user)
@@ -76,16 +90,22 @@ class RegisterFragment : Fragment() {
     }
 
     private fun verifyEmail(user: FirebaseUser?) {
-        user?.sendEmailVerification()?.addOnCompleteListener(requireActivity()) { task ->
+        user?.sendEmailVerification()?.addOnCompleteListener(this) { task ->
             if(task.isComplete) {
-                Toast.makeText(requireContext(), "Correo enviado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(requireContext(), "Error al enviar el email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error al enviar el email", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun actionComplete() {
-        //startActivity(Intent(this, LoginFragment::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    private fun returnToLogin() {
+        mBinding.actionReturn.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 }
