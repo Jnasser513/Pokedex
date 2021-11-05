@@ -41,6 +41,15 @@ data class PokemonAbilities(
     var idPokemon: Int = 0
 }
 
+@Entity(tableName = "pokemon_stats", primaryKeys = ["base_stat", "idPokemon"])
+data class PokemonStats(
+    var base_stat : Int,
+    @Embedded
+    var stat : NamedAPIResource
+){
+    var idPokemon : Int = 0
+}
+
 data class PokemonSprites(
     @ColumnInfo(name = "front_default")
     @SerializedName(value = "front_default")
@@ -91,7 +100,8 @@ data class Pokemon1 (
     @Expose @SerializedName("height") val height: Int,
     @Expose @SerializedName("sprites") val sprites: Sprites,
     @Expose @SerializedName("types") val types: List<PokemonType>,
-    @Expose @SerializedName("abilities") val abilities: List<PokemonAbilities>
+    @Expose @SerializedName("abilities") val abilities: List<PokemonAbilities>,
+    @Expose @SerializedName("stats") val stats: List<PokemonStats>
 )
 
 data class Sprites (

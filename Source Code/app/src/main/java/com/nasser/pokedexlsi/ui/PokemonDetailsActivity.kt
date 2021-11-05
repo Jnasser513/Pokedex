@@ -10,6 +10,7 @@ import com.google.android.material.chip.Chip
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
 import com.nasser.pokedexlsi.data.entity.PokemonAbilities
+import com.nasser.pokedexlsi.data.entity.PokemonStats
 import com.nasser.pokedexlsi.data.entity.PokemonType
 import com.nasser.pokedexlsi.databinding.PokemonDetailActivityBinding
 import com.nasser.pokedexlsi.ui.adapters.DetailsViewPagerAdapter
@@ -84,6 +85,7 @@ class PokemonDetailsActivity: AppCompatActivity() {
             mBinding.pokemonHeight.text = pokemon.height.toString()
             mBinding.pokemonWeight.text = pokemon.weight.toString()
             setAbilities(pokemon.abilities)
+            setStats(pokemon.stats)
         })
         mediaPlayerObserver(id-1)
     }
@@ -104,6 +106,16 @@ class PokemonDetailsActivity: AppCompatActivity() {
         types.forEach{
             chips.addView(Chip(this).apply {
                 text = it.ability.name.capitalize(Locale.getDefault())
+            })
+        }
+    }
+
+    private fun setStats(types: List<PokemonStats>){
+        val chips = mBinding.pokemonStats
+        chips.removeAllViews()
+        types.forEach{
+            chips.addView(Chip(this).apply {
+                text = "${it.stat.name.capitalize(Locale.getDefault())}, ${it.base_stat}"
             })
         }
     }
