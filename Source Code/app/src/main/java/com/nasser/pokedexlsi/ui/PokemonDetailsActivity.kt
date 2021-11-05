@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.nasser.pokedexlsi.PokedexApplication
 import com.nasser.pokedexlsi.R
+import com.nasser.pokedexlsi.data.entity.PokemonAbilities
 import com.nasser.pokedexlsi.data.entity.PokemonType
 import com.nasser.pokedexlsi.databinding.PokemonDetailActivityBinding
 import com.nasser.pokedexlsi.ui.adapters.DetailsViewPagerAdapter
@@ -66,7 +67,7 @@ class PokemonDetailsActivity: AppCompatActivity() {
 
     private fun setUpListeners(){
         initUI()
-        setUpTabs()
+        //setUpTabs()
     }
 
     private fun initUI() {
@@ -80,6 +81,9 @@ class PokemonDetailsActivity: AppCompatActivity() {
             //IMPORTANTE
             Glide.with(this).load(pokemon.sprites.frontDefault).into(mBinding.pokemonImg)
             setTypes(pokemon.types)
+            mBinding.pokemonHeight.text = pokemon.height.toString()
+            mBinding.pokemonWeight.text = pokemon.weight.toString()
+            setAbilities(pokemon.abilities)
         })
         mediaPlayerObserver(id-1)
     }
@@ -94,20 +98,14 @@ class PokemonDetailsActivity: AppCompatActivity() {
         }
     }
 
-    private fun setUpTabs() {
-        val mAdapter = DetailsViewPagerAdapter(supportFragmentManager)
-        mAdapter.addFragment(AboutPokemonFragment())
-        mAdapter.addFragment(AbilitiesPokemonFragment())
-        mAdapter.addFragment(EvolutionPokemonFragment())
-        mAdapter.addFragment(StatsPokemonFragment())
-        mBinding.viewPager.adapter = mAdapter
-        mBinding.pokemonDetailTabLayout.setupWithViewPager(mBinding.viewPager)
-
-        mBinding.pokemonDetailTabLayout.getTabAt(0)!!.setText(R.string.about_title)
-        mBinding.pokemonDetailTabLayout.getTabAt(1)!!.setText(R.string.abilities_title)
-        mBinding.pokemonDetailTabLayout.getTabAt(2)!!.setText(R.string.evolution_title)
-        mBinding.pokemonDetailTabLayout.getTabAt(3)!!.setText(R.string.stats_title)
-
+    private fun setAbilities(types: List<PokemonAbilities>){
+        val chips = mBinding.pokemonAbilities
+        chips.removeAllViews()
+        types.forEach{
+            chips.addView(Chip(this).apply {
+                text = it.ability.name.capitalize(Locale.getDefault())
+            })
+        }
     }
 
     private fun mediaPlayerObserver(id: Int) {
@@ -121,12 +119,5 @@ class PokemonDetailsActivity: AppCompatActivity() {
             }
         })
     }
-
-    /*private fun emitSound(id: Int) {
-        mBinding.actionEmitSound.setOnClickListener {
-            mediaPlayer = MediaPlayer.create(this, soundList[id])
-            mediaPlayer?.start()
-        }
-    }*/
 
 }

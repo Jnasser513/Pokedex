@@ -80,47 +80,103 @@
             android:onClick="@{()-> viewmodel.startEmitSound()}"
             android:backgroundTint="@android:color/transparent"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scrollView" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/about_pokemon_card"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="130dp"
-            android:background="@drawable/pokemon_details_style"
+            android:layout_margin="@dimen/minimum_gap"
+            app:cardElevation="@dimen/default_gap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView">
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_img">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/pokemon_detail_tab_layout"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/pokemon_details_style"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tabIndicatorColor="@android:color/holo_blue_dark"
-                app:tabMode="fixed"
-                app:tabTextColor="#1E1B30">
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/default_gap">
 
-            </com.google.android.material.tabs.TabLayout>
+                <TextView
+                    android:id="@+id/height_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Height"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pokemon_detail_tab_layout" />
+                <TextView
+                    android:id="@+id/weight_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Weight"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/pokemon_height"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/height_title"
+                    tools:text="1.70 m" />
+
+                <TextView
+                    android:id="@+id/pokemon_weight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/weight_title"
+                    tools:text="70 kg" />
+
+                <TextView
+                    android:id="@+id/abilities_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_gap"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="Abilities"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pokemon_height" />
+
+                <HorizontalScrollView
+                    android:id="@+id/scrollView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/abilities_title"
+                    app:layout_constraintTop_toBottomOf="@id/abilities_title"
+                    app:layout_constraintEnd_toEndOf="@id/abilities_title">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/pokemon_abilities"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_abilitie_one"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_chip_one" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_abilitie_two"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_chip_two" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
