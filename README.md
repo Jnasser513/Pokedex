@@ -19,6 +19,7 @@ Aplicación Android nativa construida con Kotlin y Jetpack Compose.
 ## Módulos
 
 - `:app`: punto de entrada de la aplicación.
+- `:core:designsystem`: tema Material 3, tokens visuales y componentes compartidos con soporte claro y oscuro.
 - `:core:model`: modelos de dominio sin dependencias de Android.
 - `:core:domain`: contratos de repositorio y casos de uso.
 
