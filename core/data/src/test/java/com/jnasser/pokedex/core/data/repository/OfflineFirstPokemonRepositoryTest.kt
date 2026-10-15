@@ -1,0 +1,218 @@
+package com.jnasser.pokedex.core.data.repository
+
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.jnasser.pokedex.core.data.datasource.PokemonLocalDataSource
+import com.jnasser.pokedex.core.database.entity.CatalogSyncMetadataEntity
+import com.jnasser.pokedex.core.database.entity.CatalogSyncStateEntity
+import com.jnasser.pokedex.core.database.model.PokemonCatalogEntry
+import com.jnasser.pokedex.core.database.model.PokemonDetailRecord
+import com.jnasser.pokedex.core.database.model.PokemonSummaryRecord
+import com.jnasser.pokedex.core.model.CatalogSyncResult
+import com.jnasser.pokedex.core.model.CatalogSyncState
+import com.jnasser.pokedex.core.model.PokemonCatalogScope
+import com.jnasser.pokedex.core.model.SyncFailure
+import com.jnasser.pokedex.core.network.datasource.PokemonRemoteDataSource
+import com.jnasser.pokedex.core.network.datasource.PokemonRemoteException
+import com.jnasser.pokedex.core.network.model.RemotePokemon
+import com.jnasser.pokedex.core.network.model.RemotePokemonAbility
+import com.jnasser.pokedex.core.network.model.RemotePokemonCatalog
+import com.jnasser.pokedex.core.network.model.RemotePokemonStat
+import com.jnasser.pokedex.core.network.model.RemotePokemonType
+import java.io.IOException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class OfflineFirstPokemonRepositoryTest {
+    @Test
+    fun `successful sync stores the complete catalog and metadata`() = runTest {
+        val local = FakePokemonLocalDataSource()
+        val remote = FakePokemonRemoteDataSource { completeKantoCatalog() }
+        val times = listOf(1_000L, 2_000L).iterator()
+        val repository = OfflineFirstPokemonRepository(remote, local) { times.next() }
+
+        val result = repository.synchronizeCatalog()
+
+        assertEquals(
+            CatalogSyncResult.Success(PokemonCatalogScope.EXPECTED_POKEMON_COUNT),
+            result,
+        )
+        assertEquals(PokemonCatalogScope.EXPECTED_POKEMON_COUNT, local.persistedEntries.size)
+        assertEquals(CatalogSyncStateEntity.SYNCING, local.metadataUpdates.first().state)
+        assertEquals(CatalogSyncStateEntity.COMPLETE, local.metadataUpdates.last().state)
+        assertEquals(2_000L, local.metadataUpdates.last().lastSuccessfulSyncEpochMillis)
+    }
+
+    @Test
+    fun `remote failure keeps local catalog and favorites`() = runTest {
+        val local = FakePokemonLocalDataSource(storedPokemonCount = 12).apply {
+            favoriteIds += setOf(1, 7, 12)
+        }
+        val originalFavorites = local.favoriteIds.toSet()
+        val remote = FakePokemonRemoteDataSource {
+            throw PokemonRemoteException.Network(IOException("offline"))
+        }
+        val repository = OfflineFirstPokemonRepository(remote, local) { 1_000L }
+
+        val result = repository.synchronizeCatalog()
+
+        assertEquals(
+            CatalogSyncResult.Failure(
+                reason = SyncFailure.NETWORK,
+                hasUsableLocalData = true,
+            ),
+            result,
+        )
+        assertTrue(local.persistedEntries.isEmpty())
+        assertEquals(originalFavorites, local.favoriteIds)
+        assertEquals(CatalogSyncStateEntity.FAILED, local.metadataUpdates.last().state)
+    }
+
+    @Test
+    fun `storage failure does not report remote data as persisted`() = runTest {
+        val local = FakePokemonLocalDataSource(storedPokemonCount = 4).apply {
+            failCatalogWrite = true
+        }
+        val repository = OfflineFirstPokemonRepository(
+            remoteDataSource = FakePokemonRemoteDataSource { completeKantoCatalog() },
+            localDataSource = local,
+            currentTimeMillis = { 1_000L },
+        )
+
+        val result = repository.synchronizeCatalog()
+
+        assertEquals(
+            CatalogSyncResult.Failure(
+                reason = SyncFailure.STORAGE,
+                hasUsableLocalData = true,
+            ),
+            result,
+        )
+        assertTrue(local.persistedEntries.isEmpty())
+        assertEquals(CatalogSyncStateEntity.FAILED, local.metadataUpdates.last().state)
+    }
+
+    @Test
+    fun `catalog status is derived from local flows`() = runTest {
+        val local = FakePokemonLocalDataSource(storedPokemonCount = 8).apply {
+            metadataFlow.value = CatalogSyncMetadataEntity(
+                expectedPokemonCount = PokemonCatalogScope.EXPECTED_POKEMON_COUNT,
+                synchronizedPokemonCount = 8,
+                lastAttemptEpochMillis = 2_000L,
+                lastSuccessfulSyncEpochMillis = 1_000L,
+                state = CatalogSyncStateEntity.SYNCING,
+                failureReason = null,
+            )
+        }
+        val repository = OfflineFirstPokemonRepository(
+            remoteDataSource = FakePokemonRemoteDataSource { completeKantoCatalog() },
+            localDataSource = local,
+        )
+
+        val status = repository.observeCatalogStatus().first()
+
+        assertEquals(8, status.storedPokemonCount)
+        assertEquals(PokemonCatalogScope.EXPECTED_POKEMON_COUNT, status.expectedPokemonCount)
+        assertTrue(status.hasUsableData)
+        assertFalse(status.isComplete)
+        assertEquals(CatalogSyncState.Syncing, status.syncState)
+    }
+}
+
+private class FakePokemonRemoteDataSource(
+    private val fetch: suspend () -> RemotePokemonCatalog,
+) : PokemonRemoteDataSource {
+    override suspend fun fetchCatalog(): RemotePokemonCatalog = fetch()
+}
+
+private class FakePokemonLocalDataSource(
+    storedPokemonCount: Int = 0,
+) : PokemonLocalDataSource {
+    val countFlow = MutableStateFlow(storedPokemonCount)
+    val metadataFlow = MutableStateFlow<CatalogSyncMetadataEntity?>(null)
+    val metadataUpdates = mutableListOf<CatalogSyncMetadataEntity>()
+    val favoriteIds = mutableSetOf<Int>()
+    var persistedEntries: List<PokemonCatalogEntry> = emptyList()
+    var failCatalogWrite = false
+
+    override fun pagingSource(query: String): PagingSource<Int, PokemonSummaryRecord> =
+        EmptyPokemonPagingSource()
+
+    override fun observePokemon(id: Int): Flow<PokemonDetailRecord?> =
+        MutableStateFlow(null)
+
+    override fun observeFavorites(): Flow<List<PokemonSummaryRecord>> =
+        MutableStateFlow(emptyList())
+
+    override fun observePokemonCount(): Flow<Int> = countFlow
+
+    override fun observeSyncMetadata(): Flow<CatalogSyncMetadataEntity?> = metadataFlow
+
+    override suspend fun pokemonCount(): Int = countFlow.value
+
+    override suspend fun syncMetadata(): CatalogSyncMetadataEntity? = metadataFlow.value
+
+    override suspend fun updateSyncMetadata(metadata: CatalogSyncMetadataEntity) {
+        metadataUpdates += metadata
+        metadataFlow.value = metadata
+    }
+
+    override suspend fun replaceCatalog(
+        entries: List<PokemonCatalogEntry>,
+        metadata: CatalogSyncMetadataEntity,
+    ) {
+        if (failCatalogWrite) throw IOException("database unavailable")
+        persistedEntries = entries
+        countFlow.value = entries.size
+        updateSyncMetadata(metadata)
+    }
+
+    override suspend fun setFavorite(
+        pokemonId: Int,
+        isFavorite: Boolean,
+        changedAtEpochMillis: Long,
+    ) {
+        if (isFavorite) favoriteIds += pokemonId else favoriteIds -= pokemonId
+    }
+}
+
+private class EmptyPokemonPagingSource : PagingSource<Int, PokemonSummaryRecord>() {
+    override suspend fun load(
+        params: LoadParams<Int>,
+    ): LoadResult<Int, PokemonSummaryRecord> = LoadResult.Page(
+        data = emptyList(),
+        prevKey = null,
+        nextKey = null,
+    )
+
+    override fun getRefreshKey(state: PagingState<Int, PokemonSummaryRecord>): Int? = null
+}
+
+private fun completeKantoCatalog(): RemotePokemonCatalog =
+    RemotePokemonCatalog(
+        expectedPokemonCount = PokemonCatalogScope.EXPECTED_POKEMON_COUNT,
+        pokemon = (1..PokemonCatalogScope.EXPECTED_POKEMON_COUNT).map { id ->
+            RemotePokemon(
+                id = id,
+                name = "pokemon-$id",
+                imageUrl = "https://images.test/$id.png",
+                heightDecimetres = 10,
+                weightHectograms = 100,
+                types = listOf(RemotePokemonType(slot = 1, name = "normal")),
+                abilities = listOf(
+                    RemotePokemonAbility(
+                        slot = 1,
+                        name = "ability-$id",
+                        isHidden = false,
+                    )
+                ),
+                stats = listOf(RemotePokemonStat(slot = 1, name = "hp", baseValue = 50)),
+            )
+        },
+    )

@@ -7,3 +7,7 @@ plugins {
 android {
     namespace = "com.jnasser.pokedex.core.database"
 }
+
+dependencies {
+    implementation(libs.koin.android)
+}

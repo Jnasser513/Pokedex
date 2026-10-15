@@ -21,4 +21,15 @@ interface CatalogSyncMetadataDao {
     fun observe(
         catalogId: String = CatalogSyncMetadataEntity.POKEMON_CATALOG_ID,
     ): Flow<CatalogSyncMetadataEntity?>
+
+    @Query(
+        """
+        SELECT *
+        FROM catalog_sync_metadata
+        WHERE id = :catalogId
+        """
+    )
+    suspend fun get(
+        catalogId: String = CatalogSyncMetadataEntity.POKEMON_CATALOG_ID,
+    ): CatalogSyncMetadataEntity?
 }

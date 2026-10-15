@@ -83,6 +83,9 @@ interface PokemonDao {
     @Query("SELECT COUNT(*) FROM pokemon")
     fun observePokemonCount(): Flow<Int>
 
+    @Query("SELECT COUNT(*) FROM pokemon")
+    suspend fun pokemonCount(): Int
+
     @Transaction
     suspend fun upsertCatalog(entries: List<PokemonCatalogEntry>) {
         entries.forEach { entry ->
