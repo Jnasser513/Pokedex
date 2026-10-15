@@ -20,7 +20,6 @@ class RoomConventionPlugin : Plugin<Project> {
             add("implementation", libs.library("androidx-room-ktx"))
             add("implementation", libs.library("androidx-room-paging"))
             add("ksp", libs.library("androidx-room-compiler"))
-            add("testImplementation", libs.library("androidx-room-testing"))
         }
     }
 }
