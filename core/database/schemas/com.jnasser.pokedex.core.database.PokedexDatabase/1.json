@@ -1,0 +1,322 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "13fa84d1bf415dd943098853f547fc0d",
+    "entities": [
+      {
+        "tableName": "pokemon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `image_url` TEXT, `height_decimetres` INTEGER, `weight_hectograms` INTEGER, `details_complete` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "imageUrl",
+            "columnName": "image_url",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "heightDecimetres",
+            "columnName": "height_decimetres",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "weightHectograms",
+            "columnName": "weight_hectograms",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "detailsComplete",
+            "columnName": "details_complete",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "pokemon_type",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pokemon_id` INTEGER NOT NULL, `slot` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`pokemon_id`, `slot`), FOREIGN KEY(`pokemon_id`) REFERENCES `pokemon`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pokemonId",
+            "columnName": "pokemon_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slot",
+            "columnName": "slot",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pokemon_id",
+            "slot"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pokemon_type_pokemon_id",
+            "unique": false,
+            "columnNames": [
+              "pokemon_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pokemon_type_pokemon_id` ON `${TABLE_NAME}` (`pokemon_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pokemon",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pokemon_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pokemon_ability",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pokemon_id` INTEGER NOT NULL, `slot` INTEGER NOT NULL, `name` TEXT NOT NULL, `is_hidden` INTEGER NOT NULL, PRIMARY KEY(`pokemon_id`, `slot`), FOREIGN KEY(`pokemon_id`) REFERENCES `pokemon`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pokemonId",
+            "columnName": "pokemon_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slot",
+            "columnName": "slot",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHidden",
+            "columnName": "is_hidden",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pokemon_id",
+            "slot"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pokemon_ability_pokemon_id",
+            "unique": false,
+            "columnNames": [
+              "pokemon_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pokemon_ability_pokemon_id` ON `${TABLE_NAME}` (`pokemon_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pokemon",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pokemon_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "pokemon_stat",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pokemon_id` INTEGER NOT NULL, `slot` INTEGER NOT NULL, `name` TEXT NOT NULL, `base_value` INTEGER NOT NULL, PRIMARY KEY(`pokemon_id`, `slot`), FOREIGN KEY(`pokemon_id`) REFERENCES `pokemon`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pokemonId",
+            "columnName": "pokemon_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "slot",
+            "columnName": "slot",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baseValue",
+            "columnName": "base_value",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pokemon_id",
+            "slot"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pokemon_stat_pokemon_id",
+            "unique": false,
+            "columnNames": [
+              "pokemon_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pokemon_stat_pokemon_id` ON `${TABLE_NAME}` (`pokemon_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "pokemon",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pokemon_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "favorite",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pokemon_id` INTEGER NOT NULL, `created_at_epoch_millis` INTEGER NOT NULL, PRIMARY KEY(`pokemon_id`), FOREIGN KEY(`pokemon_id`) REFERENCES `pokemon`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "pokemonId",
+            "columnName": "pokemon_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtEpochMillis",
+            "columnName": "created_at_epoch_millis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "pokemon_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "pokemon",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pokemon_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "catalog_sync_metadata",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `expected_pokemon_count` INTEGER, `synchronized_pokemon_count` INTEGER NOT NULL, `last_attempt_epoch_millis` INTEGER, `last_successful_sync_epoch_millis` INTEGER, `state` TEXT NOT NULL, `failure_reason` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "expectedPokemonCount",
+            "columnName": "expected_pokemon_count",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "synchronizedPokemonCount",
+            "columnName": "synchronized_pokemon_count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastAttemptEpochMillis",
+            "columnName": "last_attempt_epoch_millis",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "lastSuccessfulSyncEpochMillis",
+            "columnName": "last_successful_sync_epoch_millis",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "failureReason",
+            "columnName": "failure_reason",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '13fa84d1bf415dd943098853f547fc0d')"
+    ]
+  }
+}
