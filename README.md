@@ -25,6 +25,7 @@ Aplicación Android nativa construida con Kotlin y Jetpack Compose.
 - `:core:model`: modelos de dominio sin dependencias de Android.
 - `:core:domain`: contratos de repositorio y casos de uso.
 - `:core:network`: cliente Retrofit, DTOs y datasource de PokeAPI.
+- `:feature:pokemon-detail`: detalle observado desde Room, estado MVI y actualización de favoritos.
 - `:feature:pokemon-list`: listado paginado, estado MVI y componentes de la pantalla principal.
 
 `build-logic` contiene plugins separados para aplicación Android, bibliotecas Android, Compose, Kotlin/JVM, pruebas, Retrofit y Room.
@@ -36,6 +37,8 @@ La aplicación sincroniza los primeros 151 Pokémon de la Pokédex Nacional al i
 Room es la fuente de verdad que observan las pantallas. Si una actualización falla y ya existen datos, se conserva el catálogo anterior y los favoritos. El listado pagina desde Room y el desplazamiento no inicia peticiones de red.
 
 La búsqueda consulta todo el catálogo sincronizado en Room por nombre parcial o por número exacto. La consulta se conserva mediante `SavedStateHandle`, se aplica con un debounce de 300 ms y reemplaza el flujo de Paging anterior con `flatMapLatest`.
+
+El detalle recibe el número del Pokémon mediante una clave tipada y serializable de Navigation 3, y observa sus datos desde Room. El back stack se conserva ante cambios de configuración y recreación del proceso. Abrir el detalle no realiza peticiones remotas. Muestra únicamente los campos sincronizados: nombre, imagen, tipos, altura, peso, habilidades y estadísticas. Evolución, género y descripción no forman parte de esta etapa porque sus fuentes no están persistidas.
 
 La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles aunque la actualización remota falle.
 

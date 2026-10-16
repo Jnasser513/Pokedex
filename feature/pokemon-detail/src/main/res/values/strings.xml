@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pokemon_detail_title">Detalle de Pokémon</string>
+    <string name="navigate_back">Volver</string>
+    <string name="detail_loading">Cargando detalle guardado…</string>
+    <string name="detail_not_found_title">Detalle no disponible</string>
+    <string name="detail_not_found_message">Este Pokémon no existe en el catálogo local o sus datos están incompletos.</string>
+    <string name="invalid_pokemon_title">Pokémon no válido</string>
+    <string name="invalid_pokemon_message">No se recibió un número de Pokémon válido.</string>
+    <string name="detail_error_title">No se pudo leer el detalle</string>
+    <string name="detail_error_message">Ocurrió un problema al consultar los datos guardados.</string>
+    <string name="retry">Reintentar</string>
+    <string name="favorite_update_error">No se pudo actualizar el favorito.</string>
+    <string name="pokemon_number">#%1$04d</string>
+    <string name="pokemon_image">Imagen de %1$s</string>
+    <string name="image_unavailable">Imagen no disponible</string>
+    <string name="add_favorite">Agregar %1$s a favoritos</string>
+    <string name="remove_favorite">Quitar %1$s de favoritos</string>
+    <string name="height">Altura</string>
+    <string name="weight">Peso</string>
+    <string name="height_value">%1$.1f m</string>
+    <string name="weight_value">%1$.1f kg</string>
+    <string name="abilities">Habilidades</string>
+    <string name="hidden_ability">Oculta</string>
+    <string name="base_stats">Estadísticas base</string>
+    <string name="stat_total">Total</string>
+    <string name="stat_hp">PS</string>
+    <string name="stat_attack">Ataque</string>
+    <string name="stat_defense">Defensa</string>
+    <string name="stat_special_attack">At. especial</string>
+    <string name="stat_special_defense">Def. especial</string>
+    <string name="stat_speed">Velocidad</string>
+</resources>

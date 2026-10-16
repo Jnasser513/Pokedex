@@ -82,6 +82,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PokemonListRoute(
+    onPokemonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PokemonListViewModel = koinViewModel(),
 ) {
@@ -105,6 +106,7 @@ fun PokemonListRoute(
         pokemon = pokemon,
         snackbarHostState = snackbarHostState,
         onAction = viewModel::onAction,
+        onPokemonClick = onPokemonClick,
         modifier = modifier,
     )
 }
@@ -115,6 +117,7 @@ internal fun PokemonListScreen(
     pokemon: LazyPagingItems<PokemonSummary>,
     snackbarHostState: SnackbarHostState,
     onAction: (PokemonListAction) -> Unit,
+    onPokemonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -134,6 +137,7 @@ internal fun PokemonListScreen(
             uiState = uiState,
             pokemon = pokemon,
             onAction = onAction,
+            onPokemonClick = onPokemonClick,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
@@ -216,6 +220,7 @@ private fun PokemonListContent(
     uiState: PokemonListUiState,
     pokemon: LazyPagingItems<PokemonSummary>,
     onAction: (PokemonListAction) -> Unit,
+    onPokemonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val refreshState = pokemon.loadState.refresh
@@ -284,6 +289,7 @@ private fun PokemonListContent(
                 onFavoriteChange = { id, isFavorite ->
                     onAction(PokemonListAction.FavoriteChanged(id, isFavorite))
                 },
+                onPokemonClick = onPokemonClick,
                 modifier = modifier,
             )
         }
@@ -294,6 +300,7 @@ private fun PokemonListContent(
 private fun PokemonGrid(
     pokemon: LazyPagingItems<PokemonSummary>,
     onFavoriteChange: (Int, Boolean) -> Unit,
+    onPokemonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
@@ -316,6 +323,7 @@ private fun PokemonGrid(
             pokemon[index]?.let { item ->
                 PokemonCard(
                     pokemon = item,
+                    onClick = { onPokemonClick(item.id) },
                     onFavoriteChange = { isFavorite ->
                         onFavoriteChange(item.id, isFavorite)
                     },
@@ -355,6 +363,7 @@ private fun PokemonGrid(
 @Composable
 private fun PokemonCard(
     pokemon: PokemonSummary,
+    onClick: () -> Unit,
     onFavoriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -368,6 +377,7 @@ private fun PokemonCard(
     )
 
     Card(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(
