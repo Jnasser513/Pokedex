@@ -11,6 +11,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.domain)
     implementation(projects.core.network)
+    implementation(projects.feature.pokemonList)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)

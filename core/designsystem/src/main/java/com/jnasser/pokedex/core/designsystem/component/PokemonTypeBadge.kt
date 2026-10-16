@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jnasser.pokedex.core.designsystem.theme.PokemonTypeTokens
-import java.util.Locale
 
 @Composable
 fun PokemonTypeBadge(
@@ -40,7 +39,7 @@ fun PokemonTypeBadge(
         ) {
             leadingIcon?.invoke()
             Text(
-                text = label.uppercase(Locale.ROOT),
+                text = label,
                 style = MaterialTheme.typography.labelMedium,
             )
         }
