@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -47,6 +50,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -133,15 +137,23 @@ internal fun PokemonListScreen(
             )
         },
     ) { contentPadding ->
-        PokemonListContent(
-            uiState = uiState,
-            pokemon = pokemon,
-            onAction = onAction,
-            onPokemonClick = onPokemonClick,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-        )
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            PokemonListContent(
+                uiState = uiState,
+                pokemon = pokemon,
+                onAction = onAction,
+                onPokemonClick = onPokemonClick,
+                modifier = Modifier
+                    .widthIn(max = 1200.dp)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -185,8 +197,10 @@ private fun PokemonListHeader(
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(stringResource(R.string.search_placeholder)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 56.dp),
+            placeholder = { Text(stringResource(R.string.search_supporting_text)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -205,12 +219,15 @@ private fun PokemonListHeader(
             } else {
                 null
             },
-            supportingText = {
-                Text(stringResource(R.string.search_supporting_text))
-            },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             shape = MaterialTheme.shapes.extraLarge,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = Color.Transparent,
+            ),
         )
     }
 }
@@ -303,8 +320,10 @@ private fun PokemonGrid(
     onPokemonClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val minimumCardWidth = if (LocalDensity.current.fontScale >= 1.3f) 220.dp else 160.dp
+
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 160.dp),
+        columns = GridCells.Adaptive(minSize = minimumCardWidth),
         modifier = modifier,
         contentPadding = PaddingValues(
             start = PokedexDesignSystem.spacing.compactScreenMargin,
@@ -327,6 +346,7 @@ private fun PokemonGrid(
                     onFavoriteChange = { isFavorite ->
                         onFavoriteChange(item.id, isFavorite)
                     },
+                    modifier = Modifier.animateItem(),
                 )
             }
         }
@@ -413,7 +433,7 @@ private fun PokemonCard(
                         text = pokemon.name.toDisplayName(),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
                 }

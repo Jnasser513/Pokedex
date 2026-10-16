@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -45,7 +47,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,6 +58,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.jnasser.pokedex.core.designsystem.component.FavoriteButton
+import com.jnasser.pokedex.core.designsystem.component.PokedexBrandMark
 import com.jnasser.pokedex.core.designsystem.component.PokedexEmptyState
 import com.jnasser.pokedex.core.designsystem.component.PokedexErrorState
 import com.jnasser.pokedex.core.designsystem.component.PokedexLoadingState
@@ -122,11 +127,15 @@ internal fun PokemonDetailScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.pokemon_detail_title),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        PokedexBrandMark(modifier = Modifier.size(28.dp))
+                        Spacer(Modifier.width(PokedexDesignSystem.spacing.small))
+                        Text(
+                            text = stringResource(R.string.pokemon_detail_title),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
@@ -158,52 +167,60 @@ internal fun PokemonDetailScreen(
             )
         },
     ) { contentPadding ->
-        Crossfade(
-            targetState = uiState,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            label = "pokemonDetailState",
-        ) { state ->
-            when (state) {
-                PokemonDetailUiState.Loading -> {
-                    PokedexLoadingState(
-                        label = stringResource(R.string.detail_loading),
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            Crossfade(
+                targetState = uiState,
+                modifier = Modifier
+                    .widthIn(max = 840.dp)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+                label = "pokemonDetailState",
+            ) { state ->
+                when (state) {
+                    PokemonDetailUiState.Loading -> {
+                        PokedexLoadingState(
+                            label = stringResource(R.string.detail_loading),
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                PokemonDetailUiState.NotFound -> {
-                    PokedexEmptyState(
-                        title = stringResource(R.string.detail_not_found_title),
-                        message = stringResource(R.string.detail_not_found_message),
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    PokemonDetailUiState.NotFound -> {
+                        PokedexEmptyState(
+                            title = stringResource(R.string.detail_not_found_title),
+                            message = stringResource(R.string.detail_not_found_message),
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                PokemonDetailUiState.InvalidPokemonId -> {
-                    PokedexEmptyState(
-                        title = stringResource(R.string.invalid_pokemon_title),
-                        message = stringResource(R.string.invalid_pokemon_message),
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    PokemonDetailUiState.InvalidPokemonId -> {
+                        PokedexEmptyState(
+                            title = stringResource(R.string.invalid_pokemon_title),
+                            message = stringResource(R.string.invalid_pokemon_message),
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                PokemonDetailUiState.Error -> {
-                    PokedexErrorState(
-                        title = stringResource(R.string.detail_error_title),
-                        message = stringResource(R.string.detail_error_message),
-                        retryLabel = stringResource(R.string.retry),
-                        onRetry = { onAction(PokemonDetailAction.Retry) },
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    PokemonDetailUiState.Error -> {
+                        PokedexErrorState(
+                            title = stringResource(R.string.detail_error_title),
+                            message = stringResource(R.string.detail_error_message),
+                            retryLabel = stringResource(R.string.retry),
+                            onRetry = { onAction(PokemonDetailAction.Retry) },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                is PokemonDetailUiState.Content -> {
-                    PokemonDetailContent(
-                        pokemon = state.pokemon,
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                    is PokemonDetailUiState.Content -> {
+                        PokemonDetailContent(
+                            pokemon = state.pokemon,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                 }
             }
         }
@@ -345,20 +362,38 @@ private fun ArtworkPlaceholder(showProgress: Boolean) {
 
 @Composable
 private fun Measurements(pokemon: PokemonDetail) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
-    ) {
-        MetricCard(
-            label = stringResource(R.string.height),
-            value = stringResource(R.string.height_value, pokemon.heightDecimetres / 10f),
-            modifier = Modifier.weight(1f),
-        )
-        MetricCard(
-            label = stringResource(R.string.weight),
-            value = stringResource(R.string.weight_value, pokemon.weightHectograms / 10f),
-            modifier = Modifier.weight(1f),
-        )
+    val height = stringResource(R.string.height_value, pokemon.heightDecimetres / 10f)
+    val weight = stringResource(R.string.weight_value, pokemon.weightHectograms / 10f)
+
+    if (LocalDensity.current.fontScale >= 1.3f) {
+        Column(verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small)) {
+            MetricCard(
+                label = stringResource(R.string.height),
+                value = height,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            MetricCard(
+                label = stringResource(R.string.weight),
+                value = weight,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
+        ) {
+            MetricCard(
+                label = stringResource(R.string.height),
+                value = height,
+                modifier = Modifier.weight(1f),
+            )
+            MetricCard(
+                label = stringResource(R.string.weight),
+                value = weight,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
 
@@ -489,34 +524,85 @@ private fun StatRow(stat: PokemonStat) {
         else -> MaterialTheme.colorScheme.tertiary
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = PokedexDesignSystem.spacing.extraSmall),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = stat.localizedName(),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.width(96.dp),
-        )
-        Text(
-            text = stat.baseValue.toString(),
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.width(40.dp),
-        )
-        LinearProgressIndicator(
-            progress = { animatedProgress },
+    val statLabel = stat.localizedName()
+    val usesStackedLayout = LocalDensity.current.fontScale >= 1.3f
+
+    if (usesStackedLayout) {
+        Column(
             modifier = Modifier
-                .weight(1f)
-                .height(8.dp)
-                .clip(MaterialTheme.shapes.extraLarge),
-            color = indicatorColor,
-            trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-        )
+                .fillMaxWidth()
+                .padding(vertical = PokedexDesignSystem.spacing.small),
+            verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                StatLabel(statLabel)
+                StatValue(stat.baseValue)
+            }
+            StatProgress(progress = animatedProgress, color = indicatorColor)
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = PokedexDesignSystem.spacing.extraSmall),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            StatLabel(statLabel, modifier = Modifier.width(96.dp))
+            StatValue(stat.baseValue, modifier = Modifier.width(40.dp))
+            StatProgress(
+                progress = animatedProgress,
+                color = indicatorColor,
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
+}
+
+@Composable
+private fun StatLabel(
+    label: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = label,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun StatValue(
+    value: Int,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = value.toString(),
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.SemiBold,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun StatProgress(
+    progress: Float,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    LinearProgressIndicator(
+        progress = { progress },
+        modifier = modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .clip(MaterialTheme.shapes.extraLarge)
+            .clearAndSetSemantics { },
+        color = color,
+        trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+    )
 }
 
 @Composable
