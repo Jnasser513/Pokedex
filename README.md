@@ -1,11 +1,11 @@
 # Pokédex
 
-Aplicación Android nativa para consultar los primeros 151 Pokémon de la Pokédex Nacional, ver su detalle y administrar favoritos persistentes. La interfaz está construida completamente con Jetpack Compose y Material 3.
+Aplicación Android nativa para consultar Pokémon, ver su detalle y administrar favoritos persistentes. La interfaz está construida completamente con Jetpack Compose y Material 3.
 
 ## Requisitos
 
 - Android Studio compatible con Android Gradle Plugin 9.2.1.
-- JDK 17 o superior. El proyecto genera bytecode para Java 17 y el CI utiliza Temurin 21.
+- JDK 17 o superior. El proyecto genera bytecode para Java 17.
 - Android SDK 36.1.
 - Emulador o dispositivo con Android 7.0 (API 24) o superior.
 - Conexión a internet para la primera sincronización y para imágenes que Coil todavía no haya almacenado en caché.
@@ -160,20 +160,17 @@ Comandos de verificación:
 ./gradlew :app:assembleDebug
 ```
 
-La entrega no incluye pruebas instrumentadas ni de extremo a extremo. Las consultas SQL y migraciones futuras deberían validarse con Room real en un dispositivo o emulador cuando ese alcance sea requerido; los tests unitarios actuales no se presentan como prueba de persistencia física.
-
 ## Integración continua
 
 GitHub Actions ejecuta tests, lint y compilación del APK en cada pull request hacia `develop` o `main`, y en cada push a `develop`. Los reportes de fallo se conservan como artefactos durante siete días.
 
 ## Decisiones y pendientes
 
-- Se priorizó un catálogo completo y consistente de 151 Pokémon frente a una sincronización ilimitada.
+- Se priorizó un catálogo acotado y consistente frente a una sincronización ilimitada.
 - Se eligió un coordinador de aplicación en lugar de WorkManager porque no existe un requisito periódico o diferido.
 - Paging es local para mantener a Room como única fuente de verdad y evitar que el scroll controle la red.
 - Se limitaron las pantallas y campos a información respaldada por PokeAPI y persistida localmente; no se inventan CP, género, evolución o descripciones.
 - Las imágenes dependen del caché de Coil y no tienen garantía offline completa.
-- Quedan fuera del alcance pruebas UI/instrumentadas, actualización periódica, sincronización incremental y catálogos posteriores al ID 151.
 
 ## Flujo de ramas y commits
 
