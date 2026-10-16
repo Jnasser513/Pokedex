@@ -31,11 +31,11 @@ Aplicación Android nativa construida con Kotlin y Jetpack Compose.
 
 ## Sincronización del catálogo
 
-La aplicación sincroniza los 151 Pokémon de Kanto al iniciar. Primero obtiene la lista de PokeAPI y después descarga los detalles con un máximo de ocho solicitudes simultáneas. El catálogo solo se escribe en Room cuando la respuesta está completa; la actualización del catálogo y sus metadatos usa una misma transacción.
+La aplicación sincroniza los primeros 151 Pokémon de la Pokédex Nacional al iniciar. Primero obtiene la lista de PokeAPI y después descarga los detalles con un máximo de ocho solicitudes simultáneas. El catálogo solo se escribe en Room cuando la respuesta está completa; la actualización del catálogo y sus metadatos usa una misma transacción.
 
 Room es la fuente de verdad que observan las pantallas. Si una actualización falla y ya existen datos, se conserva el catálogo anterior y los favoritos. El listado pagina desde Room y el desplazamiento no inicia peticiones de red.
 
-La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles y el error se presenta como un aviso no bloqueante.
+La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles aunque la actualización remota falle.
 
 La sincronización se ejecuta en un `CoroutineScope` de aplicación. Las solicitudes simultáneas comparten el mismo trabajo para evitar descargas duplicadas. No se usa WorkManager porque no hay una tarea periódica ni un requisito de ejecución diferida garantizada.
 

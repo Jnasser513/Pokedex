@@ -33,7 +33,7 @@ class OfflineFirstPokemonRepositoryTest {
     @Test
     fun `successful sync stores the complete catalog and metadata`() = runTest {
         val local = FakePokemonLocalDataSource()
-        val remote = FakePokemonRemoteDataSource { completeKantoCatalog() }
+        val remote = FakePokemonRemoteDataSource { completePokemonCatalog() }
         val times = listOf(1_000L, 2_000L).iterator()
         val repository = OfflineFirstPokemonRepository(remote, local) { times.next() }
 
@@ -80,7 +80,7 @@ class OfflineFirstPokemonRepositoryTest {
             failCatalogWrite = true
         }
         val repository = OfflineFirstPokemonRepository(
-            remoteDataSource = FakePokemonRemoteDataSource { completeKantoCatalog() },
+            remoteDataSource = FakePokemonRemoteDataSource { completePokemonCatalog() },
             localDataSource = local,
             currentTimeMillis = { 1_000L },
         )
@@ -111,7 +111,7 @@ class OfflineFirstPokemonRepositoryTest {
             )
         }
         val repository = OfflineFirstPokemonRepository(
-            remoteDataSource = FakePokemonRemoteDataSource { completeKantoCatalog() },
+            remoteDataSource = FakePokemonRemoteDataSource { completePokemonCatalog() },
             localDataSource = local,
         )
 
@@ -194,7 +194,7 @@ private class EmptyPokemonPagingSource : PagingSource<Int, PokemonSummaryRecord>
     override fun getRefreshKey(state: PagingState<Int, PokemonSummaryRecord>): Int? = null
 }
 
-private fun completeKantoCatalog(): RemotePokemonCatalog =
+private fun completePokemonCatalog(): RemotePokemonCatalog =
     RemotePokemonCatalog(
         expectedPokemonCount = PokemonCatalogScope.EXPECTED_POKEMON_COUNT,
         pokemon = (1..PokemonCatalogScope.EXPECTED_POKEMON_COUNT).map { id ->

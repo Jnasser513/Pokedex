@@ -2,13 +2,13 @@
 <resources>
     <string name="pokemon_list_title">Pokédex</string>
     <string name="pokemon_list_subtitle">Explorador de Pokémon</string>
-    <string name="catalog_initial_loading">Preparando el catálogo de Kanto…</string>
+    <string name="catalog_initial_loading">Preparando la Pokédex…</string>
     <string name="local_catalog_loading">Cargando Pokémon guardados…</string>
     <string name="catalog_initial_error_title">No se pudo preparar la Pokédex</string>
     <string name="local_catalog_error_title">No se pudo leer el catálogo local</string>
     <string name="local_catalog_error_message">Los datos guardados no están disponibles ahora.</string>
     <string name="empty_catalog_title">Aún no hay Pokémon guardados</string>
-    <string name="empty_catalog_message">Intenta descargar nuevamente el catálogo de Kanto.</string>
+    <string name="empty_catalog_message">Intenta descargar nuevamente los datos de la Pokédex.</string>
     <string name="next_page_error_title">No se pudieron cargar más Pokémon</string>
     <string name="retry">Reintentar</string>
     <string name="pokemon_number">#%1$04d</string>
