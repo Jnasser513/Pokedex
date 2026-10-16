@@ -5,6 +5,10 @@ import androidx.paging.PagingState
 import com.jnasser.pokedex.core.data.datasource.PokemonLocalDataSource
 import com.jnasser.pokedex.core.database.entity.CatalogSyncMetadataEntity
 import com.jnasser.pokedex.core.database.entity.CatalogSyncStateEntity
+import com.jnasser.pokedex.core.database.entity.PokemonAbilityEntity
+import com.jnasser.pokedex.core.database.entity.PokemonEntity
+import com.jnasser.pokedex.core.database.entity.PokemonStatEntity
+import com.jnasser.pokedex.core.database.entity.PokemonTypeEntity
 import com.jnasser.pokedex.core.database.model.PokemonCatalogEntry
 import com.jnasser.pokedex.core.database.model.PokemonDetailRecord
 import com.jnasser.pokedex.core.database.model.PokemonSummaryRecord
@@ -123,6 +127,29 @@ class OfflineFirstPokemonRepositoryTest {
         assertFalse(status.isComplete)
         assertEquals(CatalogSyncState.Syncing, status.syncState)
     }
+
+    @Test
+    fun `pokemon detail is observed and mapped only from the local source`() = runTest {
+        val local = FakePokemonLocalDataSource().apply {
+            detailFlow.value = pokemonDetailRecord(id = 6, isFavorite = true)
+        }
+        val repository = OfflineFirstPokemonRepository(
+            remoteDataSource = FakePokemonRemoteDataSource {
+                error("detail observation must not call the remote source")
+            },
+            localDataSource = local,
+        )
+
+        val detail = repository.observePokemon(6).first()
+
+        requireNotNull(detail)
+        assertEquals(6, detail.id)
+        assertEquals("charizard", detail.name)
+        assertEquals(listOf("fire", "flying"), detail.types.map { it.name })
+        assertEquals(listOf("blaze", "solar-power"), detail.abilities.map { it.name })
+        assertEquals(listOf("hp", "attack"), detail.stats.map { it.name })
+        assertTrue(detail.isFavorite)
+    }
 }
 
 private class FakePokemonRemoteDataSource(
@@ -136,6 +163,7 @@ private class FakePokemonLocalDataSource(
 ) : PokemonLocalDataSource {
     val countFlow = MutableStateFlow(storedPokemonCount)
     val metadataFlow = MutableStateFlow<CatalogSyncMetadataEntity?>(null)
+    val detailFlow = MutableStateFlow<PokemonDetailRecord?>(null)
     val metadataUpdates = mutableListOf<CatalogSyncMetadataEntity>()
     val favoriteIds = mutableSetOf<Int>()
     var persistedEntries: List<PokemonCatalogEntry> = emptyList()
@@ -145,7 +173,7 @@ private class FakePokemonLocalDataSource(
         EmptyPokemonPagingSource()
 
     override fun observePokemon(id: Int): Flow<PokemonDetailRecord?> =
-        MutableStateFlow(null)
+        detailFlow
 
     override fun observeFavorites(): Flow<List<PokemonSummaryRecord>> =
         MutableStateFlow(emptyList())
@@ -181,6 +209,43 @@ private class FakePokemonLocalDataSource(
         if (isFavorite) favoriteIds += pokemonId else favoriteIds -= pokemonId
     }
 }
+
+private fun pokemonDetailRecord(
+    id: Int,
+    isFavorite: Boolean,
+) = PokemonDetailRecord(
+    pokemon = PokemonEntity(
+        id = id,
+        name = "charizard",
+        imageUrl = "https://images.test/$id.png",
+        heightDecimetres = 17,
+        weightHectograms = 905,
+        detailsComplete = true,
+    ),
+    types = listOf(
+        PokemonTypeEntity(pokemonId = id, slot = 2, name = "flying"),
+        PokemonTypeEntity(pokemonId = id, slot = 1, name = "fire"),
+    ),
+    abilities = listOf(
+        PokemonAbilityEntity(
+            pokemonId = id,
+            slot = 2,
+            name = "solar-power",
+            isHidden = true,
+        ),
+        PokemonAbilityEntity(
+            pokemonId = id,
+            slot = 1,
+            name = "blaze",
+            isHidden = false,
+        ),
+    ),
+    stats = listOf(
+        PokemonStatEntity(pokemonId = id, slot = 2, name = "attack", baseValue = 84),
+        PokemonStatEntity(pokemonId = id, slot = 1, name = "hp", baseValue = 78),
+    ),
+    isFavorite = isFavorite,
+)
 
 private class EmptyPokemonPagingSource : PagingSource<Int, PokemonSummaryRecord>() {
     override suspend fun load(
