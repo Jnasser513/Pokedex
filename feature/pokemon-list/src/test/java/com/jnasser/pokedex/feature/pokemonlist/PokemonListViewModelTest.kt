@@ -1,6 +1,7 @@
 package com.jnasser.pokedex.feature.pokemonlist
 
 import androidx.paging.PagingData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.jnasser.pokedex.core.domain.repository.PokemonRepository
@@ -20,6 +21,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -108,10 +112,85 @@ class PokemonListViewModelTest {
     }
 
     @Test
-    fun `initialization requests the complete local catalog`() = runTest {
+    fun `initial query requests the complete local catalog after debounce`() = runTest {
         val viewModel = createViewModel()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.pokemon.collect { }
+        }
+
+        advanceTimeBy(SEARCH_DEBOUNCE_MILLIS)
+        runCurrent()
 
         assertEquals(listOf(""), repository.pagingQueries)
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `query changes are debounced normalized and use only the latest value`() = runTest {
+        val viewModel = createViewModel()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.pokemon.collect { }
+        }
+        viewModel.onAction(PokemonListAction.SearchQueryChanged("Pika"))
+        advanceTimeBy(200)
+
+        viewModel.onAction(PokemonListAction.SearchQueryChanged("  Pikachu  "))
+        advanceTimeBy(SEARCH_DEBOUNCE_MILLIS - 1)
+        runCurrent()
+
+        assertTrue(repository.pagingQueries.isEmpty())
+
+        advanceTimeBy(1)
+        runCurrent()
+
+        assertEquals(listOf("pikachu"), repository.pagingQueries)
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `equivalent normalized queries do not restart paging`() = runTest {
+        val viewModel = createViewModel()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.pokemon.collect { }
+        }
+        viewModel.onAction(PokemonListAction.SearchQueryChanged("  #0025  "))
+        advanceTimeBy(SEARCH_DEBOUNCE_MILLIS)
+        runCurrent()
+
+        viewModel.onAction(PokemonListAction.SearchQueryChanged("#0025"))
+        advanceTimeBy(SEARCH_DEBOUNCE_MILLIS)
+        runCurrent()
+
+        assertEquals(listOf("#0025"), repository.pagingQueries)
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `saved query is restored in state and used by paging`() = runTest {
+        val savedStateHandle = SavedStateHandle(mapOf(SEARCH_QUERY_KEY to "25"))
+        val viewModel = createViewModel(savedStateHandle)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.pokemon.collect { }
+        }
+
+        assertEquals("25", viewModel.uiState.value.searchQuery)
+
+        advanceTimeBy(SEARCH_DEBOUNCE_MILLIS)
+        runCurrent()
+
+        assertEquals(listOf("25"), repository.pagingQueries)
+        viewModel.viewModelScope.cancel()
+    }
+
+    @Test
+    fun `clear search removes the persisted query`() = runTest {
+        val savedStateHandle = SavedStateHandle(mapOf(SEARCH_QUERY_KEY to "charizard"))
+        val viewModel = createViewModel(savedStateHandle)
+
+        viewModel.onAction(PokemonListAction.ClearSearch)
+        runCurrent()
+
+        assertEquals("", savedStateHandle[SEARCH_QUERY_KEY])
         viewModel.viewModelScope.cancel()
     }
 
@@ -162,7 +241,10 @@ class PokemonListViewModelTest {
         viewModel.viewModelScope.cancel()
     }
 
-    private fun createViewModel() = PokemonListViewModel(
+    private fun createViewModel(
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    ) = PokemonListViewModel(
+        savedStateHandle = savedStateHandle,
         getPagedPokemon = GetPagedPokemonUseCase(repository),
         observeCatalogStatus = ObserveCatalogStatusUseCase(repository),
         setFavorite = SetFavoriteUseCase(repository),
