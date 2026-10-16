@@ -5,10 +5,20 @@ import androidx.compose.ui.graphics.Color
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ColorContrastTest {
+    @Test
+    fun `light theme uses structured Stitch tokens`() {
+        assertEquals(Color(0xFF930009), PokedexLightColorScheme.primary)
+        assertEquals(Color(0xFFBA1A1A), PokedexLightColorScheme.primaryContainer)
+        assertEquals(Color(0xFFCDE7ED), PokedexLightColorScheme.secondaryContainer)
+        assertEquals(Color(0xFFFEF7FF), PokedexLightColorScheme.surface)
+        assertEquals(Color(0xFFF9F1FD), PokedexLightColorScheme.surfaceContainerLow)
+    }
+
     @Test
     fun `light theme content colors meet normal text contrast`() {
         assertThemeContrast(PokedexLightColorScheme)
