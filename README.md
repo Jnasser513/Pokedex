@@ -38,7 +38,7 @@ Room es la fuente de verdad que observan las pantallas. Si una actualización fa
 
 La búsqueda consulta todo el catálogo sincronizado en Room por nombre parcial o por número exacto. La consulta se conserva mediante `SavedStateHandle`, se aplica con un debounce de 300 ms y reemplaza el flujo de Paging anterior con `flatMapLatest`.
 
-El detalle recibe el número del Pokémon mediante Navigation Compose y observa sus datos desde Room. Abrirlo no realiza peticiones remotas. Muestra únicamente los campos sincronizados: nombre, imagen, tipos, altura, peso, habilidades y estadísticas. Evolución, género y descripción no forman parte de esta etapa porque sus fuentes no están persistidas.
+El detalle recibe el número del Pokémon mediante una clave tipada y serializable de Navigation 3, y observa sus datos desde Room. El back stack se conserva ante cambios de configuración y recreación del proceso. Abrir el detalle no realiza peticiones remotas. Muestra únicamente los campos sincronizados: nombre, imagen, tipos, altura, peso, habilidades y estadísticas. Evolución, género y descripción no forman parte de esta etapa porque sus fuentes no están persistidas.
 
 La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles aunque la actualización remota falle.
 

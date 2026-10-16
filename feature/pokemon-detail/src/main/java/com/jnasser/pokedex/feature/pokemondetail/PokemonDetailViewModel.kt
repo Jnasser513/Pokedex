@@ -1,6 +1,5 @@
 package com.jnasser.pokedex.feature.pokemondetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jnasser.pokedex.core.domain.usecase.ObservePokemonDetailUseCase
@@ -15,12 +14,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class PokemonDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val pokemonId: Int,
     private val observePokemonDetail: ObservePokemonDetailUseCase,
     private val setFavorite: SetFavoriteUseCase,
 ) : ViewModel() {
-    private val pokemonId: Int? = savedStateHandle[POKEMON_ID_ARGUMENT]
-
     private val mutableUiState = MutableStateFlow<PokemonDetailUiState>(
         PokemonDetailUiState.Loading
     )
@@ -44,8 +41,7 @@ class PokemonDetailViewModel(
 
     private fun observePokemon() {
         observationJob?.cancel()
-        val validPokemonId = pokemonId
-        if (validPokemonId == null || validPokemonId <= 0) {
+        if (pokemonId <= 0) {
             mutableUiState.value = PokemonDetailUiState.InvalidPokemonId
             return
         }
@@ -53,7 +49,7 @@ class PokemonDetailViewModel(
         mutableUiState.value = PokemonDetailUiState.Loading
         observationJob = viewModelScope.launch {
             try {
-                observePokemonDetail(validPokemonId).collect { pokemon ->
+                observePokemonDetail(pokemonId).collect { pokemon ->
                     mutableUiState.value = if (pokemon == null) {
                         PokemonDetailUiState.NotFound
                     } else {
@@ -69,10 +65,10 @@ class PokemonDetailViewModel(
     }
 
     private fun updateFavorite(isFavorite: Boolean) {
-        val validPokemonId = pokemonId?.takeIf { it > 0 } ?: return
+        if (pokemonId <= 0) return
         viewModelScope.launch {
             try {
-                setFavorite(validPokemonId, isFavorite)
+                setFavorite(pokemonId, isFavorite)
             } catch (error: CancellationException) {
                 throw error
             } catch (_: Throwable) {

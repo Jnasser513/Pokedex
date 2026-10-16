@@ -71,12 +71,16 @@ import com.jnasser.pokedex.feature.pokemondetail.R
 import java.util.Locale
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun PokemonDetailRoute(
+    pokemonId: Int,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: PokemonDetailViewModel = koinViewModel(),
+    viewModel: PokemonDetailViewModel = koinViewModel(
+        parameters = { parametersOf(pokemonId) },
+    ),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }

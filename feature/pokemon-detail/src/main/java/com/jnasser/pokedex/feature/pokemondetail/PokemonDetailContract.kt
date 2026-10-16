@@ -27,5 +27,3 @@ sealed interface PokemonDetailAction {
 sealed interface PokemonDetailEffect {
     data object FavoriteUpdateFailed : PokemonDetailEffect
 }
-
-const val POKEMON_ID_ARGUMENT = "pokemonId"

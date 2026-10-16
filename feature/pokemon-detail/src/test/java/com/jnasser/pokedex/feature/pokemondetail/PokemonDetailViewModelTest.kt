@@ -1,6 +1,5 @@
 package com.jnasser.pokedex.feature.pokemondetail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import app.cash.turbine.test
@@ -123,8 +122,8 @@ class PokemonDetailViewModelTest {
         viewModel.viewModelScope.cancel()
     }
 
-    private fun createViewModel(pokemonId: Int?) = PokemonDetailViewModel(
-        savedStateHandle = SavedStateHandle(mapOf(POKEMON_ID_ARGUMENT to pokemonId)),
+    private fun createViewModel(pokemonId: Int) = PokemonDetailViewModel(
+        pokemonId = pokemonId,
         observePokemonDetail = ObservePokemonDetailUseCase(repository),
         setFavorite = SetFavoriteUseCase(repository),
     )

@@ -2,6 +2,7 @@ plugins {
     id("pokedex.android.application")
     id("pokedex.android.compose")
     id("pokedex.testing")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
@@ -17,8 +18,11 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
     implementation(libs.koin.android)
+    implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.androidx.paging.common)
 }
