@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites_title">Pokédex</string>
+    <string name="favorites_subtitle">Favoritos</string>
+    <string name="favorites_loading">Cargando favoritos…</string>
+    <string name="favorites_empty_title">Aún no tienes favoritos</string>
+    <string name="favorites_empty_message">Marca Pokémon desde la Pokédex para encontrarlos aquí.</string>
+    <string name="browse_pokedex">Explorar Pokédex</string>
+    <string name="favorites_error_title">No se pudieron cargar los favoritos</string>
+    <string name="favorites_error_message">Los datos guardados no están disponibles ahora.</string>
+    <string name="retry">Reintentar</string>
+    <string name="pokemon_number">#%1$04d</string>
+    <string name="pokemon_image">Imagen de %1$s</string>
+    <string name="image_unavailable">Imagen no disponible</string>
+    <string name="remove_favorite">Eliminar</string>
+    <string name="remove_favorite_description">Quitar %1$s de favoritos</string>
+    <string name="favorite_update_error">No se pudo eliminar el favorito.</string>
+</resources>
