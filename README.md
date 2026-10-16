@@ -35,6 +35,8 @@ La aplicación sincroniza los primeros 151 Pokémon de la Pokédex Nacional al i
 
 Room es la fuente de verdad que observan las pantallas. Si una actualización falla y ya existen datos, se conserva el catálogo anterior y los favoritos. El listado pagina desde Room y el desplazamiento no inicia peticiones de red.
 
+La búsqueda consulta todo el catálogo sincronizado en Room por nombre parcial o por número exacto. La consulta se conserva mediante `SavedStateHandle`, se aplica con un debounce de 300 ms y reemplaza el flujo de Paging anterior con `flatMapLatest`.
+
 La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles aunque la actualización remota falle.
 
 La sincronización se ejecuta en un `CoroutineScope` de aplicación. Las solicitudes simultáneas comparten el mismo trabajo para evitar descargas duplicadas. No se usa WorkManager porque no hay una tarea periódica ni un requisito de ejecución diferida garantizada.

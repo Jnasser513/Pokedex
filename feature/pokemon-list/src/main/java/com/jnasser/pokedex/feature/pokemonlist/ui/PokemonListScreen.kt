@@ -2,6 +2,7 @@ package com.jnasser.pokedex.feature.pokemonlist.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +22,16 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -42,6 +49,7 @@ import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -113,7 +121,13 @@ internal fun PokemonListScreen(
         modifier = modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            PokemonListHeader()
+            PokemonListHeader(
+                searchQuery = uiState.searchQuery,
+                onSearchQueryChange = { query ->
+                    onAction(PokemonListAction.SearchQueryChanged(query))
+                },
+                onClearSearch = { onAction(PokemonListAction.ClearSearch) },
+            )
         },
     ) { contentPadding ->
         PokemonListContent(
@@ -128,33 +142,72 @@ internal fun PokemonListScreen(
 }
 
 @Composable
-private fun PokemonListHeader() {
-    Row(
+private fun PokemonListHeader(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    onClearSearch: () -> Unit,
+) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .statusBarsPadding()
-            .heightIn(min = 64.dp)
             .padding(
                 horizontal = PokedexDesignSystem.spacing.compactScreenMargin,
                 vertical = PokedexDesignSystem.spacing.small,
             ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
     ) {
-        PokedexBrandMark()
-        Spacer(Modifier.width(12.dp))
-        Column {
-            Text(
-                text = stringResource(R.string.pokemon_list_title),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Medium,
-            )
-            Text(
-                text = stringResource(R.string.pokemon_list_subtitle),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.labelMedium,
-            )
+        Row(
+            modifier = Modifier.heightIn(min = 64.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            PokedexBrandMark()
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = stringResource(R.string.pokemon_list_title),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Medium,
+                )
+                Text(
+                    text = stringResource(R.string.pokemon_list_subtitle),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
         }
+
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.search_placeholder)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = null,
+                )
+            },
+            trailingIcon = if (searchQuery.isNotEmpty()) {
+                {
+                    IconButton(onClick = onClearSearch) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.clear_search),
+                        )
+                    }
+                }
+            } else {
+                null
+            },
+            supportingText = {
+                Text(stringResource(R.string.search_supporting_text))
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            shape = MaterialTheme.shapes.extraLarge,
+        )
     }
 }
 
@@ -203,13 +256,26 @@ private fun PokemonListContent(
         }
 
         refreshState is LoadState.NotLoading && pokemon.itemCount == 0 -> {
-            PokedexEmptyState(
-                title = stringResource(R.string.empty_catalog_title),
-                message = stringResource(R.string.empty_catalog_message),
-                actionLabel = stringResource(R.string.retry),
-                onAction = { onAction(PokemonListAction.RetrySynchronization) },
-                modifier = modifier,
-            )
+            if (uiState.searchQuery.isNotBlank()) {
+                PokedexEmptyState(
+                    title = stringResource(R.string.empty_search_title),
+                    message = stringResource(
+                        R.string.empty_search_message,
+                        uiState.searchQuery.trim(),
+                    ),
+                    actionLabel = stringResource(R.string.clear_search),
+                    onAction = { onAction(PokemonListAction.ClearSearch) },
+                    modifier = modifier,
+                )
+            } else {
+                PokedexEmptyState(
+                    title = stringResource(R.string.empty_catalog_title),
+                    message = stringResource(R.string.empty_catalog_message),
+                    actionLabel = stringResource(R.string.retry),
+                    onAction = { onAction(PokemonListAction.RetrySynchronization) },
+                    modifier = modifier,
+                )
+            }
         }
 
         else -> {

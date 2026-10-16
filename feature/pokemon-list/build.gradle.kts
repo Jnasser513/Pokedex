@@ -15,6 +15,7 @@ dependencies {
 
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.paging.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
