@@ -11,11 +11,13 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.domain)
     implementation(projects.core.network)
+    implementation(projects.feature.pokemonDetail)
     implementation(projects.feature.pokemonList)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.koin.android)
 
     testImplementation(libs.androidx.paging.common)
