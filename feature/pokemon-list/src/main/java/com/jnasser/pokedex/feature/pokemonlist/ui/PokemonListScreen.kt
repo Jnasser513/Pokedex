@@ -433,6 +433,7 @@ private fun PokemonCard(
                         text = pokemon.name.toDisplayName(),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
+                        minLines = 2,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
