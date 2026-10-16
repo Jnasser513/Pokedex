@@ -2,13 +2,6 @@
 <resources>
     <string name="pokemon_list_title">Pokédex</string>
     <string name="pokemon_list_subtitle">Explorador de Pokémon</string>
-    <string name="kanto_index">Índice Regional Kanto</string>
-    <string name="ascending_number">N.º creciente</string>
-    <plurals name="pokemon_count">
-        <item quantity="one">%1$d especie</item>
-        <item quantity="other">%1$d especies</item>
-    </plurals>
-    <string name="catalog_refreshing">Actualizando el catálogo sin ocultar los datos guardados…</string>
     <string name="catalog_initial_loading">Preparando el catálogo de Kanto…</string>
     <string name="local_catalog_loading">Cargando Pokémon guardados…</string>
     <string name="catalog_initial_error_title">No se pudo preparar la Pokédex</string>

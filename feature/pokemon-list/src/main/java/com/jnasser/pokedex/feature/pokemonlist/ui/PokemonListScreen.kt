@@ -24,14 +24,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,7 +40,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -219,12 +215,6 @@ private fun PokemonListContent(
         else -> {
             PokemonGrid(
                 pokemon = pokemon,
-                pokemonCount = uiState.storedPokemonCount,
-                isRefreshing = uiState.isRefreshing,
-                refreshError = uiState.refreshError,
-                onRetrySynchronization = {
-                    onAction(PokemonListAction.RetrySynchronization)
-                },
                 onFavoriteChange = { id, isFavorite ->
                     onAction(PokemonListAction.FavoriteChanged(id, isFavorite))
                 },
@@ -237,10 +227,6 @@ private fun PokemonListContent(
 @Composable
 private fun PokemonGrid(
     pokemon: LazyPagingItems<PokemonSummary>,
-    pokemonCount: Int,
-    isRefreshing: Boolean,
-    refreshError: SyncFailure?,
-    onRetrySynchronization: () -> Unit,
     onFavoriteChange: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -256,25 +242,6 @@ private fun PokemonGrid(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            CatalogSummaryHeader(pokemonCount = pokemonCount)
-        }
-
-        if (isRefreshing) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                CatalogRefreshStatus()
-            }
-        }
-
-        if (refreshError != null) {
-            item(span = { GridItemSpan(maxLineSpan) }) {
-                RefreshWarning(
-                    message = syncFailureMessage(refreshError),
-                    onRetry = onRetrySynchronization,
-                )
-            }
-        }
-
         items(
             count = pokemon.itemCount,
             key = pokemon.itemKey(PokemonSummary::id),
@@ -316,79 +283,6 @@ private fun PokemonGrid(
 
             is LoadState.NotLoading -> Unit
         }
-    }
-}
-
-@Composable
-private fun CatalogSummaryHeader(
-    pokemonCount: Int,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = PokedexDesignSystem.spacing.extraSmall),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.kanto_index),
-                style = MaterialTheme.typography.labelLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (pokemonCount > 0) {
-                Surface(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                ) {
-                    Text(
-                        text = pluralStringResource(
-                            R.plurals.pokemon_count,
-                            pokemonCount,
-                            pokemonCount,
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                        style = MaterialTheme.typography.labelSmall,
-                        maxLines = 1,
-                    )
-                }
-            }
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.ascending_number),
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.labelMedium,
-            )
-            Text(
-                text = "↓",
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.titleMedium,
-            )
-        }
-    }
-}
-
-@Composable
-private fun CatalogRefreshStatus() {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
-    ) {
-        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        Text(
-            text = stringResource(R.string.catalog_refreshing),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            style = MaterialTheme.typography.bodySmall,
-        )
     }
 }
 
@@ -525,39 +419,6 @@ private fun PokemonImagePlaceholder(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall,
             )
-        }
-    }
-}
-
-@Composable
-private fun RefreshWarning(
-    message: String,
-    onRetry: () -> Unit,
-) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-        ),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = PokedexDesignSystem.spacing.medium,
-                    top = PokedexDesignSystem.spacing.small,
-                    bottom = PokedexDesignSystem.spacing.small,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = message,
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            TextButton(onClick = onRetry) {
-                Text(stringResource(R.string.retry))
-            }
         }
     }
 }
