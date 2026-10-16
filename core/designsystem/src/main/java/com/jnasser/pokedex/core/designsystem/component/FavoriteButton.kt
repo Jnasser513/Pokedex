@@ -35,8 +35,8 @@ fun FavoriteButton(
         colors = IconButtonDefaults.iconToggleButtonColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-            checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            checkedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            checkedContentColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
         AnimatedContent(

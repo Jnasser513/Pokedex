@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -115,33 +117,54 @@ private fun MainDestinationScaffold(
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    selected = selectedDestination == MainDestination.Pokedex,
-                    onClick = onPokedexClick,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = null,
-                        )
-                    },
-                    label = { Text(stringResource(R.string.navigation_pokedex)) },
-                )
-                NavigationBarItem(
-                    selected = selectedDestination == MainDestination.Favorites,
-                    onClick = onFavoritesClick,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = null,
-                        )
-                    },
-                    label = { Text(stringResource(R.string.navigation_favorites)) },
-                )
-            }
+            MainNavigationBar(
+                selectedDestination = selectedDestination,
+                onPokedexClick = onPokedexClick,
+                onFavoritesClick = onFavoritesClick,
+            )
         },
         content = content,
     )
+}
+
+@Composable
+private fun MainNavigationBar(
+    selectedDestination: MainDestination,
+    onPokedexClick: () -> Unit,
+    onFavoritesClick: () -> Unit,
+) {
+    NavigationBar {
+        NavigationBarItem(
+            selected = selectedDestination == MainDestination.Pokedex,
+            onClick = onPokedexClick,
+            icon = {
+                Icon(
+                    imageVector = if (selectedDestination == MainDestination.Pokedex) {
+                        Icons.Filled.Home
+                    } else {
+                        Icons.Outlined.Home
+                    },
+                    contentDescription = null,
+                )
+            },
+            label = { Text(stringResource(R.string.navigation_pokedex)) },
+        )
+        NavigationBarItem(
+            selected = selectedDestination == MainDestination.Favorites,
+            onClick = onFavoritesClick,
+            icon = {
+                Icon(
+                    imageVector = if (selectedDestination == MainDestination.Favorites) {
+                        Icons.Filled.Favorite
+                    } else {
+                        Icons.Outlined.FavoriteBorder
+                    },
+                    contentDescription = null,
+                )
+            },
+            label = { Text(stringResource(R.string.navigation_favorites)) },
+        )
+    }
 }
 
 private enum class MainDestination {

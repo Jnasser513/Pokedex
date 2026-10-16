@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -43,6 +45,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -113,50 +116,58 @@ internal fun FavoritesScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = { FavoritesHeader() },
     ) { contentPadding ->
-        Crossfade(
-            targetState = uiState,
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(contentPadding),
-            label = "favoritesState",
-        ) { state ->
-            when (state) {
-                FavoritesUiState.Loading -> {
-                    PokedexLoadingState(
-                        label = stringResource(R.string.favorites_loading),
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+            contentAlignment = Alignment.TopCenter,
+        ) {
+            Crossfade(
+                targetState = uiState,
+                modifier = Modifier
+                    .widthIn(max = 840.dp)
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+                label = "favoritesState",
+            ) { state ->
+                when (state) {
+                    FavoritesUiState.Loading -> {
+                        PokedexLoadingState(
+                            label = stringResource(R.string.favorites_loading),
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                FavoritesUiState.Empty -> {
-                    PokedexEmptyState(
-                        title = stringResource(R.string.favorites_empty_title),
-                        message = stringResource(R.string.favorites_empty_message),
-                        actionLabel = stringResource(R.string.browse_pokedex),
-                        onAction = onBrowsePokedex,
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    FavoritesUiState.Empty -> {
+                        PokedexEmptyState(
+                            title = stringResource(R.string.favorites_empty_title),
+                            message = stringResource(R.string.favorites_empty_message),
+                            actionLabel = stringResource(R.string.browse_pokedex),
+                            onAction = onBrowsePokedex,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                FavoritesUiState.Error -> {
-                    PokedexErrorState(
-                        title = stringResource(R.string.favorites_error_title),
-                        message = stringResource(R.string.favorites_error_message),
-                        retryLabel = stringResource(R.string.retry),
-                        onRetry = { onAction(FavoritesAction.Retry) },
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
+                    FavoritesUiState.Error -> {
+                        PokedexErrorState(
+                            title = stringResource(R.string.favorites_error_title),
+                            message = stringResource(R.string.favorites_error_message),
+                            retryLabel = stringResource(R.string.retry),
+                            onRetry = { onAction(FavoritesAction.Retry) },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
 
-                is FavoritesUiState.Content -> {
-                    FavoritePokemonList(
-                        pokemon = state.pokemon,
-                        onPokemonClick = onPokemonClick,
-                        onRemoveFavorite = { pokemonId ->
-                            onAction(FavoritesAction.RemoveFavorite(pokemonId))
-                        },
-                        modifier = Modifier.fillMaxSize(),
-                    )
+                    is FavoritesUiState.Content -> {
+                        FavoritePokemonList(
+                            pokemon = state.pokemon,
+                            onPokemonClick = onPokemonClick,
+                            onRemoveFavorite = { pokemonId ->
+                                onAction(FavoritesAction.RemoveFavorite(pokemonId))
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
                 }
             }
         }
@@ -217,6 +228,7 @@ private fun FavoritePokemonList(
                 pokemon = item,
                 onClick = { onPokemonClick(item.id) },
                 onRemoveFavorite = { onRemoveFavorite(item.id) },
+                modifier = Modifier.animateItem(),
             )
         }
     }
@@ -227,6 +239,7 @@ private fun FavoritePokemonCard(
     pokemon: PokemonSummary,
     onClick: () -> Unit,
     onRemoveFavorite: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val displayName = pokemon.name.toDisplayName()
     val primaryType = pokemon.types.minByOrNull { it.slot }?.name.orEmpty()
@@ -237,10 +250,11 @@ private fun FavoritePokemonCard(
         stop = typeColor ?: MaterialTheme.colorScheme.primaryContainer,
         fraction = if (isSystemInDarkTheme()) 0.18f else 0.28f,
     )
+    val imageSize = if (LocalDensity.current.fontScale >= 1.3f) 80.dp else 112.dp
 
     Card(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(PokedexDesignSystem.elevations.level1),
@@ -259,7 +273,7 @@ private fun FavoritePokemonCard(
             FavoritePokemonArtwork(
                 imageUrl = pokemon.imageUrl,
                 pokemonName = displayName,
-                modifier = Modifier.size(112.dp),
+                modifier = Modifier.size(imageSize),
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -274,7 +288,7 @@ private fun FavoritePokemonCard(
                     text = displayName,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
                 FlowRow(
