@@ -31,6 +31,12 @@ Aplicación Android nativa construida con Kotlin y Jetpack Compose.
 
 `build-logic` contiene plugins separados para aplicación Android, bibliotecas Android, Compose, Kotlin/JVM, pruebas, Retrofit y Room.
 
+## Diseño y accesibilidad
+
+La interfaz toma como referencia las tres pantallas del proyecto de Stitch y los tokens estructurados de `DESIGN.md`. Cuando el texto descriptivo y el bloque de tokens difieren, prevalecen los valores estructurados; por ejemplo, el color primario claro es `#930009`, mientras `#BA1A1A` se conserva como contenedor primario. El tema oscuro utiliza la paleta tonal equivalente con contraste comprobado.
+
+En teléfonos se usa navegación inferior y, desde 600 dp, Navigation Rail. El rail también se conserva en tamaños expandidos porque solo existen dos destinos principales; añadir un drawer y una composición master-detail aumentaría el alcance sin aportar una navegación distinta. El catálogo admite más columnas según el ancho disponible y el contenido de detalle y favoritos limita su ancho para mantener una lectura cómoda. Con fuentes grandes, el grid reduce columnas y las métricas y estadísticas cambian a una disposición vertical para evitar cortes. Las acciones mantienen objetivos táctiles mínimos de 48 dp y las animaciones se reservan para cambios de estado, favoritos y movimientos de elementos.
+
 ## Sincronización del catálogo
 
 La aplicación sincroniza los primeros 151 Pokémon de la Pokédex Nacional al iniciar. Primero obtiene la lista de PokeAPI y después descarga los detalles con un máximo de ocho solicitudes simultáneas. El catálogo solo se escribe en Room cuando la respuesta está completa; la actualización del catálogo y sus metadatos usa una misma transacción.
