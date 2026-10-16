@@ -5,6 +5,7 @@ import com.jnasser.pokedex.core.data.di.dataModule
 import com.jnasser.pokedex.core.database.di.databaseModule
 import com.jnasser.pokedex.core.network.di.networkModule
 import com.jnasser.pokedex.di.appModule
+import com.jnasser.pokedex.feature.favorites.di.favoritesModule
 import com.jnasser.pokedex.feature.pokemondetail.di.pokemonDetailModule
 import com.jnasser.pokedex.feature.pokemonlist.di.pokemonListModule
 import com.jnasser.pokedex.sync.CatalogSyncCoordinator
@@ -22,6 +23,7 @@ class PokedexApplication : Application() {
                 networkModule,
                 dataModule,
                 appModule,
+                favoritesModule,
                 pokemonDetailModule,
                 pokemonListModule,
             )

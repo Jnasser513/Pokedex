@@ -25,6 +25,7 @@ Aplicación Android nativa construida con Kotlin y Jetpack Compose.
 - `:core:model`: modelos de dominio sin dependencias de Android.
 - `:core:domain`: contratos de repositorio y casos de uso.
 - `:core:network`: cliente Retrofit, DTOs y datasource de PokeAPI.
+- `:feature:favorites`: favoritos reactivos desde Room, estado MVI y eliminación persistente.
 - `:feature:pokemon-detail`: detalle observado desde Room, estado MVI y actualización de favoritos.
 - `:feature:pokemon-list`: listado paginado, estado MVI y componentes de la pantalla principal.
 
@@ -39,6 +40,8 @@ Room es la fuente de verdad que observan las pantallas. Si una actualización fa
 La búsqueda consulta todo el catálogo sincronizado en Room por nombre parcial o por número exacto. La consulta se conserva mediante `SavedStateHandle`, se aplica con un debounce de 300 ms y reemplaza el flujo de Paging anterior con `flatMapLatest`.
 
 El detalle recibe el número del Pokémon mediante una clave tipada y serializable de Navigation 3, y observa sus datos desde Room. El back stack se conserva ante cambios de configuración y recreación del proceso. Abrir el detalle no realiza peticiones remotas. Muestra únicamente los campos sincronizados: nombre, imagen, tipos, altura, peso, habilidades y estadísticas. Evolución, género y descripción no forman parte de esta etapa porque sus fuentes no están persistidas.
+
+Los favoritos se almacenan en una tabla separada relacionada por el número del Pokémon. La pantalla de favoritos observa Room mediante `Flow`, por lo que agregar o quitar un favorito actualiza de inmediato el listado, el detalle y la sección de favoritos. La navegación inferior incluye únicamente Pokédex y Favoritos; las funciones de entrenador que aparecen en la referencia visual quedan fuera del alcance.
 
 La pantalla principal separa el estado de sincronización del estado de Paging. Una carga inicial fallida ocupa la pantalla cuando Room está vacío; si ya hay datos, estos permanecen visibles aunque la actualización remota falle.
 

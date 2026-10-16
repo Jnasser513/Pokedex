@@ -2,6 +2,7 @@ package com.jnasser.pokedex.core.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import app.cash.turbine.test
 import com.jnasser.pokedex.core.data.datasource.PokemonLocalDataSource
 import com.jnasser.pokedex.core.database.entity.CatalogSyncMetadataEntity
 import com.jnasser.pokedex.core.database.entity.CatalogSyncStateEntity
@@ -150,6 +151,33 @@ class OfflineFirstPokemonRepositoryTest {
         assertEquals(listOf("hp", "attack"), detail.stats.map { it.name })
         assertTrue(detail.isFavorite)
     }
+
+    @Test
+    fun `favorites are mapped from local source and removal stays reactive`() = runTest {
+        val local = FakePokemonLocalDataSource().apply {
+            favoritesFlow.value = listOf(pokemonSummaryRecord(id = 6, name = "charizard"))
+        }
+        val repository = OfflineFirstPokemonRepository(
+            remoteDataSource = FakePokemonRemoteDataSource {
+                error("favorites observation must not call the remote source")
+            },
+            localDataSource = local,
+            currentTimeMillis = { 3_000L },
+        )
+
+        repository.observeFavorites().test {
+            val initialFavorites = awaitItem()
+            assertEquals(listOf(6), initialFavorites.map { it.id })
+            assertEquals(listOf("fire", "flying"), initialFavorites.single().types.map { it.name })
+            assertTrue(initialFavorites.single().isFavorite)
+
+            repository.setFavorite(id = 6, isFavorite = false)
+
+            assertTrue(awaitItem().isEmpty())
+            assertEquals(Triple(6, false, 3_000L), local.lastFavoriteChange)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }
 
 private class FakePokemonRemoteDataSource(
@@ -164,10 +192,12 @@ private class FakePokemonLocalDataSource(
     val countFlow = MutableStateFlow(storedPokemonCount)
     val metadataFlow = MutableStateFlow<CatalogSyncMetadataEntity?>(null)
     val detailFlow = MutableStateFlow<PokemonDetailRecord?>(null)
+    val favoritesFlow = MutableStateFlow<List<PokemonSummaryRecord>>(emptyList())
     val metadataUpdates = mutableListOf<CatalogSyncMetadataEntity>()
     val favoriteIds = mutableSetOf<Int>()
     var persistedEntries: List<PokemonCatalogEntry> = emptyList()
     var failCatalogWrite = false
+    var lastFavoriteChange: Triple<Int, Boolean, Long>? = null
 
     override fun pagingSource(query: String): PagingSource<Int, PokemonSummaryRecord> =
         EmptyPokemonPagingSource()
@@ -176,7 +206,7 @@ private class FakePokemonLocalDataSource(
         detailFlow
 
     override fun observeFavorites(): Flow<List<PokemonSummaryRecord>> =
-        MutableStateFlow(emptyList())
+        favoritesFlow
 
     override fun observePokemonCount(): Flow<Int> = countFlow
 
@@ -206,9 +236,32 @@ private class FakePokemonLocalDataSource(
         isFavorite: Boolean,
         changedAtEpochMillis: Long,
     ) {
+        lastFavoriteChange = Triple(pokemonId, isFavorite, changedAtEpochMillis)
         if (isFavorite) favoriteIds += pokemonId else favoriteIds -= pokemonId
+        if (!isFavorite) {
+            favoritesFlow.value = favoritesFlow.value.filterNot { it.pokemon.id == pokemonId }
+        }
     }
 }
+
+private fun pokemonSummaryRecord(
+    id: Int,
+    name: String,
+) = PokemonSummaryRecord(
+    pokemon = PokemonEntity(
+        id = id,
+        name = name,
+        imageUrl = "https://images.test/$id.png",
+        heightDecimetres = 17,
+        weightHectograms = 905,
+        detailsComplete = true,
+    ),
+    types = listOf(
+        PokemonTypeEntity(pokemonId = id, slot = 2, name = "flying"),
+        PokemonTypeEntity(pokemonId = id, slot = 1, name = "fire"),
+    ),
+    isFavorite = true,
+)
 
 private fun pokemonDetailRecord(
     id: Int,

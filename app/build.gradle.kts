@@ -12,10 +12,12 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.domain)
     implementation(projects.core.network)
+    implementation(projects.feature.favorites)
     implementation(projects.feature.pokemonDetail)
     implementation(projects.feature.pokemonList)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

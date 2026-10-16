@@ -2,6 +2,7 @@ package com.jnasser.pokedex.di
 
 import com.jnasser.pokedex.core.domain.usecase.GetPagedPokemonUseCase
 import com.jnasser.pokedex.core.domain.usecase.ObserveCatalogStatusUseCase
+import com.jnasser.pokedex.core.domain.usecase.ObserveFavoritesUseCase
 import com.jnasser.pokedex.core.domain.usecase.ObservePokemonDetailUseCase
 import com.jnasser.pokedex.core.domain.usecase.SetFavoriteUseCase
 import com.jnasser.pokedex.core.domain.usecase.SynchronizePokemonCatalogUseCase
@@ -16,6 +17,7 @@ import org.koin.dsl.module
 val appModule = module {
     singleOf(::GetPagedPokemonUseCase)
     singleOf(::ObserveCatalogStatusUseCase)
+    singleOf(::ObserveFavoritesUseCase)
     singleOf(::ObservePokemonDetailUseCase)
     singleOf(::SetFavoriteUseCase)
     singleOf(::SynchronizePokemonCatalogUseCase)
