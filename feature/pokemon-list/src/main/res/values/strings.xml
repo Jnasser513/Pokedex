@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pokedex_mark">P</string>
     <string name="pokemon_list_title">Pokédex</string>
     <string name="pokemon_list_subtitle">Explorador de Pokémon</string>
-    <string name="kanto_index">Índice regional de Kanto</string>
+    <string name="kanto_index">Índice Regional Kanto</string>
+    <string name="ascending_number">N.º creciente</string>
     <plurals name="pokemon_count">
         <item quantity="one">%1$d especie</item>
         <item quantity="other">%1$d especies</item>

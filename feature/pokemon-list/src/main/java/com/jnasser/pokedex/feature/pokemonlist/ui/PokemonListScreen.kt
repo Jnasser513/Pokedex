@@ -1,34 +1,35 @@
 package com.jnasser.pokedex.feature.pokemonlist.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -38,6 +39,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -54,6 +58,7 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.jnasser.pokedex.core.designsystem.component.FavoriteButton
+import com.jnasser.pokedex.core.designsystem.component.PokedexBrandMark
 import com.jnasser.pokedex.core.designsystem.component.PokedexEmptyState
 import com.jnasser.pokedex.core.designsystem.component.PokedexErrorState
 import com.jnasser.pokedex.core.designsystem.component.PokedexLoadingState
@@ -112,10 +117,7 @@ internal fun PokemonListScreen(
         modifier = modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            PokemonListHeader(
-                pokemonCount = uiState.storedPokemonCount,
-                isRefreshing = uiState.isRefreshing,
-            )
+            PokemonListHeader()
         },
     ) { contentPadding ->
         PokemonListContent(
@@ -130,83 +132,32 @@ internal fun PokemonListScreen(
 }
 
 @Composable
-private fun PokemonListHeader(
-    pokemonCount: Int,
-    isRefreshing: Boolean,
-) {
-    Column(
+private fun PokemonListHeader() {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
+            .statusBarsPadding()
+            .heightIn(min = 64.dp)
             .padding(
                 horizontal = PokedexDesignSystem.spacing.compactScreenMargin,
-                vertical = PokedexDesignSystem.spacing.medium,
+                vertical = PokedexDesignSystem.spacing.small,
             ),
-        verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = stringResource(R.string.pokedex_mark),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-            Spacer(Modifier.width(PokedexDesignSystem.spacing.medium))
-            Column {
-                Text(
-                    text = stringResource(R.string.pokemon_list_title),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = stringResource(R.string.pokemon_list_subtitle),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-            }
-        }
-
-        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        PokedexBrandMark()
+        Spacer(Modifier.width(12.dp))
+        Column {
             Text(
-                text = stringResource(R.string.kanto_index),
-                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(R.string.pokemon_list_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Medium,
             )
-            if (pokemonCount > 0) {
-                Text(
-                    text = pluralStringResource(
-                        R.plurals.pokemon_count,
-                        pokemonCount,
-                        pokemonCount,
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-        }
-
-        AnimatedVisibility(visible = isRefreshing) {
-            Column(verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall)) {
-                LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-                Text(
-                    text = stringResource(R.string.catalog_refreshing),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+            Text(
+                text = stringResource(R.string.pokemon_list_subtitle),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.labelMedium,
+            )
         }
     }
 }
@@ -268,6 +219,8 @@ private fun PokemonListContent(
         else -> {
             PokemonGrid(
                 pokemon = pokemon,
+                pokemonCount = uiState.storedPokemonCount,
+                isRefreshing = uiState.isRefreshing,
                 refreshError = uiState.refreshError,
                 onRetrySynchronization = {
                     onAction(PokemonListAction.RetrySynchronization)
@@ -284,18 +237,35 @@ private fun PokemonListContent(
 @Composable
 private fun PokemonGrid(
     pokemon: LazyPagingItems<PokemonSummary>,
+    pokemonCount: Int,
+    isRefreshing: Boolean,
     refreshError: SyncFailure?,
     onRetrySynchronization: () -> Unit,
     onFavoriteChange: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 156.dp),
+        columns = GridCells.Adaptive(minSize = 160.dp),
         modifier = modifier,
-        contentPadding = PaddingValues(PokedexDesignSystem.spacing.compactScreenMargin),
-        horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.medium),
+        contentPadding = PaddingValues(
+            start = PokedexDesignSystem.spacing.compactScreenMargin,
+            top = PokedexDesignSystem.spacing.small,
+            end = PokedexDesignSystem.spacing.compactScreenMargin,
+            bottom = PokedexDesignSystem.spacing.medium,
+        ),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            CatalogSummaryHeader(pokemonCount = pokemonCount)
+        }
+
+        if (isRefreshing) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                CatalogRefreshStatus()
+            }
+        }
+
         if (refreshError != null) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 RefreshWarning(
@@ -350,6 +320,79 @@ private fun PokemonGrid(
 }
 
 @Composable
+private fun CatalogSummaryHeader(
+    pokemonCount: Int,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = PokedexDesignSystem.spacing.extraSmall),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.kanto_index),
+                style = MaterialTheme.typography.labelLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (pokemonCount > 0) {
+                Surface(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                ) {
+                    Text(
+                        text = pluralStringResource(
+                            R.plurals.pokemon_count,
+                            pokemonCount,
+                            pokemonCount,
+                        ),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                    )
+                }
+            }
+        }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(R.string.ascending_number),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.labelMedium,
+            )
+            Text(
+                text = "↓",
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CatalogRefreshStatus() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
+    ) {
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        Text(
+            text = stringResource(R.string.catalog_refreshing),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
+@Composable
 private fun PokemonCard(
     pokemon: PokemonSummary,
     onFavoriteChange: (Boolean) -> Unit,
@@ -357,18 +400,32 @@ private fun PokemonCard(
 ) {
     val primaryType = pokemon.types.minByOrNull { it.slot }?.name.orEmpty()
     val typeContainer = PokemonTypeTokens.colorsFor(primaryType)?.container
-    val containerColor = typeContainer?.copy(alpha = if (isSystemInDarkTheme()) 0.2f else 0.55f)
-        ?: MaterialTheme.colorScheme.surfaceContainer
+    val gradientEnd = MaterialTheme.colorScheme.surfaceContainerHigh
+    val gradientStart = typeContainer.cardBackgroundColor(
+        fallback = MaterialTheme.colorScheme.surfaceContainer,
+        darkTheme = isSystemInDarkTheme(),
+        darkSurface = gradientEnd,
+    )
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
+        shape = MaterialTheme.shapes.extraLarge,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = PokedexDesignSystem.elevations.level1,
         ),
     ) {
         Column(
-            modifier = Modifier.padding(PokedexDesignSystem.spacing.medium),
+            modifier = Modifier
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(gradientStart, gradientEnd),
+                    )
+                )
+                .padding(14.dp),
             verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
         ) {
             Row(
@@ -409,14 +466,19 @@ private fun PokemonCard(
                 pokemonName = pokemon.name.toDisplayName(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(132.dp),
+                    .aspectRatio(1f),
             )
 
-            pokemon.types.sortedBy { it.slot }.forEach { type ->
-                PokemonTypeBadge(
-                    typeName = type.name,
-                    label = type.name.toDisplayName(),
-                )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.small),
+                verticalArrangement = Arrangement.spacedBy(PokedexDesignSystem.spacing.extraSmall),
+            ) {
+                pokemon.types.sortedBy { it.slot }.forEach { type ->
+                    PokemonTypeBadge(
+                        typeName = type.name,
+                        label = type.name.toDisplayName(),
+                    )
+                }
             }
         }
     }
@@ -513,4 +575,13 @@ private fun syncFailureMessage(failure: SyncFailure): String = stringResource(
 
 private fun String.toDisplayName(): String = replaceFirstChar { character ->
     if (character.isLowerCase()) character.titlecase(Locale.ROOT) else character.toString()
+}
+
+private fun Color?.cardBackgroundColor(
+    fallback: Color,
+    darkTheme: Boolean,
+    darkSurface: Color,
+): Color {
+    val typeColor = this ?: fallback
+    return if (darkTheme) lerp(darkSurface, typeColor, 0.2f) else typeColor
 }
